@@ -74,7 +74,6 @@ def parse(prepared_input, commands_dict):
                     case _:
                         temp += command[c_counter]
                         c_counter += 1
-            print(p_counter, c_counter, temp)
             if temp.upper() == temp and not(all([not(i.isalpha()) for i in temp])):
                 if prepared_input[p_counter] == temp:
                     p_counter += 1
@@ -96,24 +95,27 @@ def parse(prepared_input, commands_dict):
                 continue
 
             if temp[0] == "(" and temp[-1] == ")":
-                if len(temp) > 2:
-                    lengths = []
-                    br_temp = ""
-                    for symbol in temp:
-                        match symbol:
-                            case "(":
-                                continue
-                            case ",":
-                                lengths.append(int(br_temp))
-                            case " ":
-                                continue
-                            case ")":
-                                lengths.append(int(br_temp))
-                            case _:
-                                br_temp+=symbol
+                lengths = []
+                br_temp = ""
+                for symbol in temp:
+                    match symbol:
+                        case "(":
+                            continue
+                        case ",":
+                            lengths.append(int(br_temp))
+                            br_temp = ""
+                        case " ":
+                            continue
+                        case ")":
+                            lengths.append(int(br_temp))
+                            br_temp = ""
+                        case _:
+                            br_temp+=symbol
 
-                    br_temp = ""
-                    bracket_content = [[]]
+                br_temp = ""
+                bracket_content = [[]]
+                bracket_opened = True
+                while bracket_opened:
                     for symbol in prepared_input[p_counter]:
                         match symbol:
                             case "(":
@@ -128,8 +130,20 @@ def parse(prepared_input, commands_dict):
                             case ")":
                                 bracket_content[-1].append(br_temp)
                                 br_temp = ""
+                                bracket_opened = False
+
                             case _:
                                 br_temp+=symbol
+                    if bracket_opened:
+                        p_counter += 1
+                if len(temp) > 2:
+                    for comma in bracket_content:
+                        if not len(comma) in lengths:
+                            return -3
+                if "brackets" in args.keys():
+                    args["brackets"].append(bracket_content)
+                else:
+                    args["brackets"] = bracket_content
                 p_counter += 1
                 c_counter += 1
 
