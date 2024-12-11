@@ -116,3 +116,25 @@ def parse(prepared_input, commands_dict):
             # skip space
             p_c += 1
             c_c += 1
+
+        # parse brackets
+        if command[c_c] == "(":
+            c_c += 1
+            if command[c_c] == ")": # any number of values between commas
+                brackets = [[]]
+                temp = ""
+                while prepared_input[p_c] != ")":
+                    if p_c == len(prepared_input)-1:
+                        return -4 # brackets were never closed
+                    match prepared_input[p_c]:
+                        case " ":
+                            if temp != "": # if value exists
+                                brackets[-1].append(temp)
+                                temp = ("")
+                        case ",":
+                            if temp != "":  # if value exists
+                                brackets[-1].append(temp)
+                                temp = ("")
+                        case _:
+                            temp += prepared_input[p_c]
+                    p_c += 1
