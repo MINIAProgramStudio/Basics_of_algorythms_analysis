@@ -147,6 +147,66 @@ def parse(prepared_input, commands_dict):
                     args["brackets"] = bracket_content
                 p_counter += 1
                 c_counter += 1
+                continue
+
+            if temp[0:2] == "[(" and temp[-2:-1] == ")]": # if non-obligatory brackets
+                if not prepared_input[p_counter][0] == "(": # if no non-obligatory brackets are present in
+                    continue
+                lengths = []
+                br_temp = ""
+                for symbol in temp:
+                    match symbol: # get valid numbers of values between commas
+                        case "(":
+                            continue
+                        case "[":
+                            continue
+                        case ",":
+                            lengths.append(int(br_temp))
+                            br_temp = ""
+                        case " ":
+                            continue
+                        case ")":
+                            lengths.append(int(br_temp))
+                            br_temp = ""
+                        case _:
+                            br_temp+=symbol
+
+                br_temp = ""
+                bracket_content = [[]]
+                bracket_opened = True
+                while bracket_opened: # parse brackets in received command
+                    for symbol in prepared_input[p_counter]:
+                        match symbol:
+                            case "(":
+                                continue
+                            case "[":
+                                continue
+                            case " ":
+                                bracket_content[-1].append(br_temp)
+                                br_temp = ""
+                            case ",":
+                                bracket_content[-1].append(br_temp)
+                                br_temp = ""
+                                bracket_content.append([])
+                            case ")":
+                                bracket_content[-1].append(br_temp)
+                                br_temp = ""
+                                bracket_opened = False
+                            case _:
+                                br_temp+=symbol
+                    if bracket_opened:
+                        p_counter += 1
+                if len(temp) > 4: # if valid numbers of values between commas were specified, conduct check whether --||-- satisfy said valid numbers
+                    for comma in bracket_content:
+                        if not len(comma) in lengths:
+                            return -3
+                if "sq_brackets" in args.keys():
+                    args["sq_brackets"].append(bracket_content)
+                else:
+                    args["sq_brackets"] = bracket_content
+                p_counter += 1
+                c_counter += 1
+                continue
 
 
 
