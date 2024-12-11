@@ -4,17 +4,18 @@ eol = [";"]
 
 
 """
-command checker syntax:
+command syntax:
 Must start with COMMAND_CAPITAL_NAME
 Followed by other syntax structures:
 OBLIGATORY_KEYWORD
 {OPTIONAL_PHRASE_OR_WORD} # Parser will return True if this was inputted or False otherwise
+value 
 (n_of_vals_1,n_of_vals_2,...,leave empty for any number of values between commas) # Parser will return list of lists of values
 [OPTIONAL_KEYWORD (n_of_vals_b_c_1,n_of_vals_b_c_2,...,leave empty for any number of values between commas)] # Parser will return list of lists of values or None if keyword was not present
 
 
 
-"COMMAND_CAPITAL_NAME": "COMMAND_NAME {OPTIONAL_PHRASE_OR_WORD} [OPTIONAL_KEYWORD value]"
+"COMMAND_CAPITAL_NAME": "COMMAND_NAME {OPTIONAL_PHRASE_OR_WORD} value [OPTIONAL_KEYWORD value]"
 """
 
 commands = {
@@ -59,22 +60,22 @@ def prepare_input(string):
     return output
 
 def parse(prepared_input, commands_dict):
-    if prepared_input[0] in commands_dict.keys():
+    if prepared_input[0] in commands_dict.keys(): # check if received command exists
         args = {}
         command = commands_dict[prepared_input[0]]
         p_counter = 0
         c_counter = 0
-        while p_counter < len(prepared_input):
+        while p_counter < len(prepared_input): # while received command is not parsed
 
             temp = ""
-            while c_counter<len(command):
+            while c_counter<len(command): # move counter to next non-space character
                 match command[c_counter]:
                     case " ":
                         break
                     case _:
                         temp += command[c_counter]
                         c_counter += 1
-            if temp.upper() == temp and not(all([not(i.isalpha()) for i in temp])):
+            if temp.upper() == temp and not(all([not(i.isalpha()) for i in temp])): # if COMMAND_CAPITAL_NAME or OBLIGATORY_KEYWORD
                 if prepared_input[p_counter] == temp:
                     p_counter += 1
                     c_counter += 1
@@ -88,17 +89,17 @@ def parse(prepared_input, commands_dict):
                     pass
                 else:
                     return -2
-            if temp.lower() == temp and not(all([not(i.isalpha()) for i in temp])):
+            if temp.lower() == temp and not(all([not(i.isalpha()) for i in temp])): # if value
                 args[temp] = prepared_input[p_counter]
                 p_counter += 1
                 c_counter += 1
                 continue
 
-            if temp[0] == "(" and temp[-1] == ")":
+            if temp[0] == "(" and temp[-1] == ")": # if obligatory brackets
                 lengths = []
                 br_temp = ""
                 for symbol in temp:
-                    match symbol:
+                    match symbol: # get valid numbers of values between commas
                         case "(":
                             continue
                         case ",":
@@ -115,7 +116,7 @@ def parse(prepared_input, commands_dict):
                 br_temp = ""
                 bracket_content = [[]]
                 bracket_opened = True
-                while bracket_opened:
+                while bracket_opened: # parse brackets in received command
                     for symbol in prepared_input[p_counter]:
                         match symbol:
                             case "(":
@@ -136,7 +137,7 @@ def parse(prepared_input, commands_dict):
                                 br_temp+=symbol
                     if bracket_opened:
                         p_counter += 1
-                if len(temp) > 2:
+                if len(temp) > 2: # if valid numbers of values between commas were specified, conduct check whether --||-- satisfy said valid numbers
                     for comma in bracket_content:
                         if not len(comma) in lengths:
                             return -3
