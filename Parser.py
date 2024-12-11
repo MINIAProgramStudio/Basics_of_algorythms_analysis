@@ -51,4 +51,68 @@ def prepare_input(string):
     return string
 
 def parse(prepared_input, commands_dict):
-    pass
+    p_c = 0 # prepared_input counter
+    c_c = 0 # command counter
+
+    # determine which command was inputed
+    p_temp = ""
+    while prepared_input[p_c] != " ":
+        p_temp += prepared_input[p_c]
+        p_c += 1
+
+    if not p_temp.upper() in commands_dict.keys():
+        return -2 # no such command
+
+    args = {}
+    args["command"] = p_temp.upper()
+    command = commands_dict[p_temp.upper()]
+    c_c = p_c
+
+    # skip space
+    p_c += 1
+    c_c += 1
+
+    # while command is not parsed fully
+    while c_c < len(command):
+        # skip optional keywords
+        if command[c_c] == "{":
+            temp = ""
+            p_c_old = p_c
+            c_c += 1
+            while command[c_c] == prepared_input[p_c].uppercase(): # while input matches optional keyword/phrase
+                temp += command[c_c]
+                c_c += 1
+                p_c += 1
+            if command[c_c] == "}": # if fully matched
+                c_c += 2 # skip "} "
+                args[temp] = True
+            else:
+                while command[c_c] != "}":
+                    temp += command[c_c]
+                    c_c += 1
+                c_c += 2
+                args[temp] = False
+                p_c = p_c_old
+
+        # parse obligatory keywords
+        if command[c_c].isalpha() and command[c_c] == command[c_c].upper():
+            while command[c_c] == prepared_input[p_c].uppercase():  # while input matches obligatory keyword
+                c_c += 1
+                p_c += 1
+            if command[c_c] != " ":
+                return -3 # optional keyword missing/entered wrong
+
+        # parse obligatory values
+        if command[c_c].isalpha() and command[c_c] == command[c_c].lower():
+            temp_c = ""
+            temp_p = ""
+            while prepared_input[p_c] != " ": # get value
+                temp_p += prepared_input[p_c]
+                p_c += 1
+            while command[c_c] != " ": # get name of the value
+                temp_c += command[c_c]
+                c_c += 1
+            args[temp_c] = temp_p # store value
+            # skip space
+            p_c += 1
+            c_c += 1
