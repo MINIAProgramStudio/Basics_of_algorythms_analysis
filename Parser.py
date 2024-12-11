@@ -9,8 +9,8 @@ Must start with COMMAND_CAPITAL_NAME
 Followed by other syntax structures:
 OBLIGATORY_KEYWORD
 {OPTIONAL_PHRASE_OR_WORD} # Parser will return True if this was inputted or False otherwise
-(n_of_vals_1, n_of_vals_2, ..., leave empty for any number of values between commas) # Parser will return list of lists of values
-[OPTIONAL_KEYWORD (n_of_vals_b_c_1, n_of_vals_b_c_2, ..., leave empty for any number of values between commas)] # Parser will return list of lists of values or None if keyword was not present
+(n_of_vals_1,n_of_vals_2,...,leave empty for any number of values between commas) # Parser will return list of lists of values
+[OPTIONAL_KEYWORD (n_of_vals_b_c_1,n_of_vals_b_c_2,...,leave empty for any number of values between commas)] # Parser will return list of lists of values or None if keyword was not present
 
 
 
@@ -18,9 +18,9 @@ OBLIGATORY_KEYWORD
 """
 
 commands = {
-    "CREATE": "CREATE table_name (1, 2)",
+    "CREATE": "CREATE table_name (1,2)",
     "INSERT": "INSERT {INTO} table_name (1)",
-    "SELECT": "SELECT [(1)] FROM table_name [WHERE condition] [GROUP_BY (1)}"
+    "SELECT": "SELECT [(1)] FROM table_name [WHERE condition] [GROUP_BY (1)]"
 }
 
 def recive_input():
@@ -47,7 +47,16 @@ def prepare_input(string):
             string = string[:i]
             break
         i+=1
-    return string
+    temp = ""
+    output = []
+    for symbol in string:
+        if symbol == " ":
+            output.append(temp)
+            temp = ""
+        else:
+            temp+=symbol
+    output.append(temp)
+    return output
 
 def parse(prepared_input, commands_dict):
     if prepared_input[0] in commands_dict.keys():
@@ -56,6 +65,7 @@ def parse(prepared_input, commands_dict):
         p_counter = 0
         c_counter = 0
         while p_counter < len(prepared_input):
+
             temp = ""
             while c_counter<len(command):
                 match command[c_counter]:
@@ -64,7 +74,8 @@ def parse(prepared_input, commands_dict):
                     case _:
                         temp += command[c_counter]
                         c_counter += 1
-            if temp.upper() == temp:
+            print(p_counter, c_counter, temp)
+            if temp.upper() == temp and not(all([not(i.isalpha()) for i in temp])):
                 if prepared_input[p_counter] == temp:
                     p_counter += 1
                     c_counter += 1
@@ -78,7 +89,7 @@ def parse(prepared_input, commands_dict):
                     pass
                 else:
                     return -2
-            if temp.lower() == temp:
+            if temp.lower() == temp and not(all([not(i.isalpha()) for i in temp])):
                 args[temp] = prepared_input[p_counter]
                 p_counter += 1
                 c_counter += 1
@@ -101,8 +112,29 @@ def parse(prepared_input, commands_dict):
                             case _:
                                 br_temp+=symbol
 
+                    br_temp = ""
+                    bracket_content = [[]]
+                    for symbol in prepared_input[p_counter]:
+                        match symbol:
+                            case "(":
+                                continue
+                            case " ":
+                                bracket_content[-1].append(br_temp)
+                                br_temp = ""
+                            case ",":
+                                bracket_content[-1].append(br_temp)
+                                br_temp = ""
+                                bracket_content.append([])
+                            case ")":
+                                bracket_content[-1].append(br_temp)
+                                br_temp = ""
+                            case _:
+                                br_temp+=symbol
+                p_counter += 1
+                c_counter += 1
 
 
 
+        return args
     else:
         return -1
