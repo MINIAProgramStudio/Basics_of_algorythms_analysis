@@ -74,7 +74,18 @@ def parse(prepared_input, commands_dict):
 
     # while command is not parsed fully
     while c_c < len(command):
-        # skip optional keywords
+        # parse brackets
+        if command[c_c] in ["{", "[", "("]:
+            bracket_level = [command[c_c]]
+            c_c += 1
+            while bracket_level:
+                match command[c_c]:
+                    case "{" | "[" | "(":
+                        bracket_level.append(command[c_c])
+                        c_c += 1
+                        continue
+                    case "}" |
+
         if command[c_c] == "{":
             temp = ""
             p_c_old = p_c
@@ -113,72 +124,6 @@ def parse(prepared_input, commands_dict):
                 temp_c += command[c_c]
                 c_c += 1
             args[temp_c] = temp_p # store value
-            # skip space
-            p_c += 1
-            c_c += 1
-
-        # parse brackets
-        if command[c_c] == "(":
-            c_c += 1
-            if command[c_c] == ")": # any number of values between commas
-                brackets = [[]]
-                temp = ""
-                while prepared_input[p_c] != ")":
-                    if p_c == len(prepared_input)-1:
-                        return -4 # brackets were never closed
-                    match prepared_input[p_c]:
-                        case " " if temp != "": # if value exists
-                                brackets[-1].append(temp)
-                                temp = ("")
-                        case ",":  # if value exists
-                            if temp != "":
-                                brackets[-1].append(temp)
-                            brackets.append([])
-                            temp = ("")
-                        case _:
-                            temp += prepared_input[p_c]
-                    p_c += 1
-                if "obligatory_brackets" in args.keys():
-                    args["obligatory_brackets"].append(brackets)
-                else:
-                    args["obligatory_brackets"] = [brackets]
-            else:
-                # get valid lengths
-                lengths  = []
-                temp = ""
-                while command[c_c] != ")":
-                    match command[c_c]:
-                        case "," | " " if temp != "":
-                                lengths.append(int(temp))
-                                temp = ""
-                        case _ if command[c_c].isdigit():
-                            temp+=command[c_c]
-                    c_c += 1
-
-                # parse brackets
-                brackets = [[]]
-                temp = ""
-                while prepared_input[p_c] != ")":
-                    if p_c == len(prepared_input)-1:
-                        return -4 # brackets were never closed
-                    match prepared_input[p_c]:
-                        case " " if temp != "":  # if value exists
-                            brackets[-1].append(temp)
-                            temp = ("")
-                        case ",":  # if value exists
-                            if temp != "":
-                                brackets[-1].append(temp)
-                            if not len(brackets[-1]) in lengths:
-                                return -5 # invalid number of values between commas
-                            brackets.append([])
-                            temp = ("")
-                        case _:
-                            temp += prepared_input[p_c]
-                    p_c += 1
-                if "obligatory_brackets" in args.keys():
-                    args["obligatory_brackets"].append(brackets)
-                else:
-                    args["obligatory_brackets"] = [brackets]
             # skip space
             p_c += 1
             c_c += 1
