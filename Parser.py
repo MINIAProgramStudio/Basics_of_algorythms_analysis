@@ -84,6 +84,14 @@ def parse(prepared_input, commands_dict):
                     case "{" | "[" | "(":
                         bracket_level.append(["{", "[", "("].index(command[c_c]))
                         c_c += 1
+                        # bracket level errors catching:
+                        if len(bracket_level) >= 2:
+                            if bracket_level[-1] == bracket_level[-2]:
+                                return -3.1 # example command has invalid bracket structure: can't have [[]], (()) and [[]]
+                            if bracket_level[-2] == 0:
+                                return -3.2  # example command has invalid bracket structure: {no brackets should be here}
+
+
                         continue
                     case "}" | "]" | ")":
                         if ["}", "]", ")"].index(command[c_c]) == bracket_level[-1]:
@@ -91,7 +99,7 @@ def parse(prepared_input, commands_dict):
                             c_c += 1
                             continue
                         else:
-                            return -3 # example command has invalid bracket structure
+                            return -3.3 # example command has invalid bracket structure: brackets were never closed
 
                 # handle {OPTIONAL_PHRASE_OR_WORD}
                 if bracket_level[-1] == 0:
@@ -108,8 +116,21 @@ def parse(prepared_input, commands_dict):
                                 typed_in = False
                         c_c += 1
                     if c_c == len(command):
-                        return -3 # example command has invalid bracket structure
+                        return -3.3 # example command has invalid bracket structure: brackets were never closed
                     args[optional_keyword] = typed_in
+
+                # handle () -- value brackets
+                if bracket_level[-1] == 2:
+                    if len(bracket_level) >= 2:
+                        pass
+                    # handle obligatory ()
+                    else:
+                        valid_lengths = []
+                        while command[c_c] != ")" and c_c < len(command):
+                            pass
+                        if c_c == len(command):
+                            return -3.3  # example command has invalid bracket structure: brackets were never closed
+
 
 
         # parse keywords
