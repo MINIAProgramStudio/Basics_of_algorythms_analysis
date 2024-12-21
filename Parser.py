@@ -78,40 +78,47 @@ def parse(prepared_input, commands_dict):
         if command[c_c] in ["{", "[", "("]:
             bracket_level = [command[c_c]]
             c_c += 1
-            while bracket_level:
+            while bracket_level: # while brackets are open
+                # handle bracket symbols
                 match command[c_c]:
                     case "{" | "[" | "(":
-                        bracket_level.append(command[c_c])
+                        bracket_level.append(["{", "[", "("].index(command[c_c]))
                         c_c += 1
                         continue
-                    case "}" |
+                    case "}" | "]" | ")":
+                        if ["}", "]", ")"].index(command[c_c]) == bracket_level[-1]:
+                            bracket_level.pop(-1)
+                            c_c += 1
+                            continue
+                        else:
+                            return -3 # example command has invalid bracket structure
 
-        if command[c_c] == "{":
-            temp = ""
-            p_c_old = p_c
-            c_c += 1
-            while command[c_c] == prepared_input[p_c].uppercase(): # while input matches optional keyword/phrase
-                temp += command[c_c]
-                c_c += 1
-                p_c += 1
-            if command[c_c] == "}": # if fully matched
-                c_c += 2 # skip "} "
-                args[temp] = True
-            else:
-                while command[c_c] != "}":
-                    temp += command[c_c]
-                    c_c += 1
-                c_c += 2
-                args[temp] = False
-                p_c = p_c_old
+                # handle {OPTIONAL_PHRASE_OR_WORD}
+                if bracket_level[-1] == 0:
+                    optional_keyword = ""
+                    typed_in = True
+                    old_p_c = p_c
+                    while command[c_c] != "}" and c_c < len(command):
+                        optional_keyword += command[c_c]
+                        if typed_in:
+                            if command[c_c] == prepared_input[p_c]:
+                                p_c += 1
+                            else:
+                                p_c = old_p_c
+                                typed_in = False
+                        c_c += 1
+                    if c_c == len(command):
+                        return -3 # example command has invalid bracket structure
+                    args[optional_keyword] = typed_in
 
-        # parse obligatory keywords
+
+        # parse keywords
         if command[c_c].isalpha() and command[c_c] == command[c_c].upper():
-            while command[c_c] == prepared_input[p_c].uppercase():  # while input matches obligatory keyword
+            while command[c_c] == prepared_input[p_c].uppercase():  # while input matches keyword
                 c_c += 1
                 p_c += 1
             if command[c_c] != " ":
-                return -3 # optional keyword missing/entered wrong
+                return -4 # optional keyword missing/entered wrong
 
         # parse obligatory values
         if command[c_c].isalpha() and command[c_c] == command[c_c].lower():
