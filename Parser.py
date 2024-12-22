@@ -15,30 +15,32 @@ commands = {
 }
 
 def recive_input():
-    string = str(sys.stdin.buffer.readline())
+    string = str(sys.stdin.buffer.readline())[2:-1]
     while not any(s in string for s in eol):
-        new_line = "\n"+input("...")
+        new_line = "\n"+str(sys.stdin.buffer.readline())[2:-1]
         if new_line == "\nRESET;":
             print(">>>Resetting")
-            string = sys.stdin.buffer.readline()
+            string = sys.stdin.buffer.readline()[2:-1]
             continue
         string += new_line
-    return string[2:]
+    return string
 
 def prepare_input(string):
     i = 0
-    while i < len(string):
-        if string[i] in spaces:
-            string = string[:i] + spaces[0] + string[i+1:]
-            if i > 0:
-                if string[i-1] == string[i]:
-                    string = string[:i-1]+string[i:]
-                    continue
-        if string[i] in eol:
-            string = string[:i]
-            break
-        i+=1
-    return string
+    if len(spaces) > 1:
+        for space in spaces[1:]:
+            while space in string:
+                string.replace(space, spaces[0])
+    while spaces[0] + spaces[0] in string:
+        string.replace(spaces[0] + spaces[0], spaces[0])
+
+    first_eol = len(string)
+    for eol_s in eol:
+        if string.find(eol_s)>= 0:
+            first_eol = (min(string.find(eol_s),first_eol))
+
+
+    return string[:first_eol]
 
 def parse(prepared_input, commands_dict):
     if not " " in prepared_input:
@@ -53,6 +55,7 @@ def parse(prepared_input, commands_dict):
         c += 1
 
     if not temp.upper() in commands_dict.keys():
+        print(">>>", temp.upper())
         return -2 # no such command
 
     # call command-specific parser

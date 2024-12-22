@@ -36,6 +36,7 @@ class Table:
         # end if condition////////////////////////////////////////////////////////////////////////////////////////////
 
         if group_by_columns:
+            delimiter = len(group_by_columns)
             group_by_columns_names = group_by_columns
             group_by_columns = [self.column_names.index(i) for i in group_by_columns]
             raw_rows = copy.deepcopy(rows_to_return)
@@ -51,42 +52,45 @@ class Table:
                     column = pair[1]
                     if not column in self.column_names:
                         return -3  # no such column
-                    group_by_columns.append(str(function) + "(" + str(column))
+                    group_by_columns_names.append(str(function) + "(" + str(column) + ")")
                     column = self.column_names.index(column)
                     match function:
                         case "COUNT":
+                            rows_for_search = [i[:delimiter] for i in rows_to_return]
                             for row in raw_rows:
                                 grouped_row = [row[i] for i in group_by_columns]
-                                if len(rows_to_return[rows_to_return.index(grouped_row)]) < len(group_by_columns_names):
+                                if len(rows_to_return[rows_for_search.index(grouped_row)]) < len(group_by_columns_names):
                                     rows_to_return[rows_to_return.index(grouped_row)].append(1)
                                 else:
-                                    rows_to_return[rows_to_return.index(grouped_row)][-1] += 1
+                                    rows_to_return[rows_for_search.index(grouped_row)][-1] += 1
                         case "MAX":
                             for row in raw_rows:
                                 grouped_row = [row[i] for i in group_by_columns]
-                                if len(rows_to_return[rows_to_return.index(grouped_row)]) < len(group_by_columns_names):
+                                if len(rows_to_return[rows_for_search.index(grouped_row)]) < len(group_by_columns_names):
                                     rows_to_return[rows_to_return.index(grouped_row)].append(row[column])
                                 else:
-                                    rows_to_return[rows_to_return.index(grouped_row)][-1] = max(row[column], rows_to_return[rows_to_return.index(grouped_row)][-1])
+                                    rows_to_return[rows_for_search.index(grouped_row)][-1] = max(row[column], rows_to_return[rows_to_return.index(grouped_row)][-1])
                         case "AVG":
                             counter = [0]*len(rows_to_return)
                             for row in raw_rows:
                                 grouped_row = [row[i] for i in group_by_columns]
-                                if len(rows_to_return[rows_to_return.index(grouped_row)]) < len(group_by_columns_names):
-                                    rows_to_return[rows_to_return.index(grouped_row)].append(row[column])
-                                    counter[rows_to_return.index(grouped_row)] += 1
+                                if len(rows_to_return[rows_for_search.index(grouped_row)]) < len(group_by_columns_names):
+                                    rows_to_return[rows_for_search.index(grouped_row)].append(row[column])
+                                    counter[rows_for_search.index(grouped_row)] += 1
                                 else:
-                                    rows_to_return[rows_to_return.index(grouped_row)][-1] += row[column]
-                                    counter[rows_to_return.index(grouped_row)] += 1
+                                    rows_to_return[rows_for_search.index(grouped_row)][-1] += row[column]
+                                    counter[rows_for_search.index(grouped_row)] += 1
 
                             i = 0
                             while i < len(rows_to_return):
-                                rows_to_return[i][-1] /= counter[i]
+                                rows_to_return[i][-1] = float(rows_to_return[i][-1]) / float(counter[i])
                                 i+=1
                         case _:
                             return -4 # no such function
             # end if aggregation///////////////////////////////////////////////////////////////////////////////////////
-        return [group_by_columns_names, rows_to_return]
+            return [group_by_columns_names, rows_to_return]
+        # end if group_by_columns///////////////////////////////////////////////////////////////////////////////////////
+        return [self.column_names, rows_to_return]
 
 
 

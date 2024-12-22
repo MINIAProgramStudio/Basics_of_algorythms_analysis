@@ -54,7 +54,7 @@ def parse_insert(prepared_input):
                     temp = ""
                 break
             case _:
-                if symbol.isalpha() or symbol == "_":
+                if symbol.isalpha() or symbol.isdigit() or symbol in ["_", "'", '"']:
                     temp+=symbol
                     continue
                 if len(temp) > 0:

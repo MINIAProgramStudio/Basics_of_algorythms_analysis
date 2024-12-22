@@ -17,7 +17,10 @@ while True:
         print(">CREATE -- creates new table if namaspace is empty. Syntax sensitive: CREATE table_name (column_name [, ...]);")
         print(">INSERT -- inserts row into existing table. Syntax sensitive: INSERT [INTO] table_name (N [, ...]);")
         continue
-    parsing_result = Parser.parse(Parser.prepare_input(string), Parser.commands)
+    prepared_input = Parser.prepare_input(string)
+    print("<<<" + prepared_input)
+    parsing_result = Parser.parse(prepared_input, Parser.commands)
+
     if isinstance(parsing_result, list):
         if isinstance(parsing_result[1], list):
             match parsing_result[0]:

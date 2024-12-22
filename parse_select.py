@@ -38,7 +38,7 @@ def parse_select(prepared_input):
                     if temp_a:
                         if not temp:
                             return -3.3 # invalid bracket structure. Closing bracket was encountered too soon
-                        aggregation.append = [temp_a, temp]
+                        aggregation.append([temp_a, temp])
                         temp = ""
                         temp_a = ""
                         continue
@@ -46,14 +46,9 @@ def parse_select(prepared_input):
 
                 case ",":
                     end_flag = 0
-                    if temp_a:
-                        if not temp:
+                    if temp_a or temp:
                             return -5  # invalid comma placement
-                        aggregation.append = [temp_a, temp]
-                        temp = ""
-                        temp_a = ""
-                        continue
-                    return -5  # invalid comma placement
+                    continue
 
                 case " ":
                     if end_flag == 1:
@@ -72,7 +67,7 @@ def parse_select(prepared_input):
                         case "M" | "m" if end_flag == 5: end_flag = 6
                     temp += symbol
 
-        prepared_input = prepared_input[counter+1:] # crop prepared input from the end of FROM to the end of the string
+        prepared_input = prepared_input[counter:] # crop prepared input from the end of FROM to the end of the string
     # Handle aggregation end///////////////////////////////////////////////////////////////////////////////////////////
     if " " in prepared_input:
         table_name = prepared_input[:prepared_input.index(" ")] # get table name
