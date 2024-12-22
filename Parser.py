@@ -1,6 +1,6 @@
 spaces = [' ', '\t', '\r', '\n']
 string_containers = ['"', "'"]
-eol = [";"]
+eol = ";"
 
 from parse_create import parse_create
 from parse_insert import parse_insert
@@ -17,7 +17,7 @@ commands = {
 def recive_input():
     patience = 100
     string = input()
-    while not any(s in string for s in eol):
+    while not eol in string:
         patience -= 1
         if patience < 0:
             print("Too many new lines, exiting")
@@ -40,13 +40,9 @@ def prepare_input(string):
     while spaces[0] + spaces[0] in string:
         string = string.replace(spaces[0] + spaces[0], spaces[0])
 
-    first_eol = len(string)
-    for eol_s in eol:
-        if string.find(eol_s)>= 0:
-            first_eol = (min(string.find(eol_s),first_eol))
-
-
-    return string[:first_eol]
+    while string[0] == spaces[0]:
+        string = string[1:]
+    return string[:string.index(eol)]
 
 def parse(prepared_input, commands_dict):
     if not " " in prepared_input:
