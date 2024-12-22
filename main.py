@@ -6,6 +6,14 @@ Data = Data_structure.Data()
 while True:
     print()
     string = input("<<<")
+    if "EXIT" in string.upper() and len(string) < 7:
+        break
+    if "HELP" in string.upper() and len(string) < 7:
+        print(">>>List of all commands:")
+        print(">EXIT -- terminates the program. Not syntax sensitive.")
+        print(">HELP -- lists all avaliable commands. Not syntax sensitive.")
+        print(">CREATE -- creates new table if namaspace is empty. Syntax sensitive: CREATE table_name (column_name [, ...]);")
+        continue
     parsing_result = Parser.parse(Parser.prepare_input(Parser.recive_input()), Parser.commands)
     if isinstance(parsing_result, list):
         if isinstance(parsing_result[1], list):

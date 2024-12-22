@@ -16,7 +16,7 @@ class Data:
         return 0
 
     def __str__(self):
-        output = "There are "+len(self.tables)" tables:"
+        output = "There are "+len(self.tables)+" tables:"
         for key in self.tables.keys():
             output += "\n"+key
         return output
