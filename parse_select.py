@@ -4,6 +4,9 @@
 #   [GROUP_BY column_name [, ...] ];
 
 def parse_select(prepared_input):
+    aggregation = False
+    condition = False
+    group_by_columns = False
     prepared_input = prepared_input[prepared_input.index(" ") + 1:]  # crop function name
     if not " " in prepared_input:
         return -2  # input is lacking spaces
@@ -16,7 +19,7 @@ def parse_select(prepared_input):
     else:
         if not "GROUP_BY" in prepared_input.upper():
             return -6 # Must not have aggregation if GROUP_BY is not present
-        aggregation = {}
+        aggregation = []
         end_flag = 0
         temp_a = "" # temporary string for aggregation function name
         temp = "" # temporary string for undetermined pieces of input
@@ -36,9 +39,7 @@ def parse_select(prepared_input):
                     if temp_a:
                         if not temp:
                             return -3.3 # invalid bracket structure. Closing bracket was encountered too soon
-                        if temp in aggregation.keys():
-                            return -4 # column aggregation is already specified
-                        aggregation[temp] = temp_a
+                        aggregation.append = [temp_a, temp]
                         temp = ""
                         temp_a = ""
                         continue
@@ -49,9 +50,7 @@ def parse_select(prepared_input):
                     if temp_a:
                         if not temp:
                             return -5  # invalid comma placement
-                        if temp in aggregation.keys():
-                            return -4  # column aggregation is already specified
-                        aggregation[temp] = temp_a
+                        aggregation.append = [temp_a, temp]
                         temp = ""
                         temp_a = ""
                         continue
@@ -83,10 +82,54 @@ def parse_select(prepared_input):
     prepared_input = prepared_input[prepared_input.index(" ") + 1:]  # crop table name
 
     # Handle WHERE start\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    if prepared_input[:7].upper() == "WHERE ":
+        prepared_input = prepared_input[7:]
+        condition = ["",""]
+        c = 0
+        # get column_1:
+        while prepared_input[c].isalpha() or prepared_input[c].isdigit() or prepared_input[c] == "_":
+            condition[0] += prepared_input[c]
+            c += 1
+        prepared_input = prepared_input[c:]
+        if not "=" in prepared_input:
+            return -6 # expecting =
 
+        prepared_input = prepared_input[prepared_input.index("=")]
+        while prepared_input[0] == " ":
+            prepared_input = prepared_input[1:]
+
+        end_symbol = " "
+        if prepared_input[0] == "'" or prepared_input[0] == '"':
+            end_symbol = prepared_input[0]
+            prepared_input = prepared_input[1:]
+
+        c = 0
+        for symbol in prepared_input:
+            c += 1
+            if symbol == end_symbol:
+                break
+            else:
+                condition[1] += symbol
+        prepared_input = prepared_input[c+1:]
     # Handle WHERE end/////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     # Handle GROUP_BY start\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
+    if prepared_input[:10].upper() == "GROUP_BY ":
+        prepared_input = prepared_input[10:]
+        group_by_columns = []
+        temp = ""
+        for symbol in prepared_input:
+            match symbol:
+                case ",":
+                    group_by_columns.append(temp)
+                    temp = ""
+                case " ":
+                    continue
+                case _:
+                    temp += symbol
+        group_by_columns.append(temp)
+        temp = ""
     # Handle GROUP_BY end//////////////////////////////////////////////////////////////////////////////////////////////
+
+    return [table_name, aggregation, condition, group_by_columns]
