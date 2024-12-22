@@ -13,6 +13,7 @@ class Data:
         if table_name in self.tables.keys():
             return -2 # table already exsists
         self.tables[table_name] = Table(column_names)
+        return 0
 
     def __str__(self):
         output = "There are "+len(self.tables)" tables:"

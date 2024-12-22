@@ -9,7 +9,14 @@ while True:
     parsing_result = Parser.parse(Parser.prepare_input(Parser.recive_input()), Parser.commands)
     if isinstance(parsing_result, list):
         if isinstance(parsing_result[1], list):
-            pass
+            match parsing_result[0]:
+                case "CREATE":
+                    execution_result = Data.create(parsing_result[1][0],parsing_result[1][1])
+                    match execution_result:
+                        case 0:
+                            print(">>>Table "+parsing_result[1][0]+" was created successfully.")
+                        case -2:
+                            print(">>>EXECUTION ERROR: CREATE. Table already exists.")
         else:
             match parsing_result[0]:
                 case "CREATE":
