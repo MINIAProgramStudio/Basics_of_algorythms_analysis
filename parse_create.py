@@ -1,5 +1,3 @@
-# CREATE table_name (column_name *[INDEXED] [, ...]);
-
 def parse_create(prepared_input):
     prepared_input = prepared_input[prepared_input.index(" ")+1:] # crop function name
     if not " " in prepared_input:
@@ -7,6 +5,11 @@ def parse_create(prepared_input):
 
     table_name = prepared_input[:prepared_input.index(" ")] # get table name
     prepared_input = prepared_input[prepared_input.index(" ") + 1:]  # crop table name
+
+    if not table_name[0].isalpha():
+        return -5  # invalid character
+    if not all([i.isalpha() or i.isdigit() or i == "_" for i in table_name]):
+        return -5  # invalid character
 
     if not "(" in prepared_input:
         return -3.1  # input is lacking brackets
@@ -33,8 +36,13 @@ def parse_create(prepared_input):
                     temp = ""
                 break
             case _: # add any other valid characters to temp
-                if symbol.isalpha() or symbol == "_":
-                    temp+=symbol
+                if symbol.isalpha() or symbol.isdigit() or symbol == "_":
+                    if temp:
+                        temp+=symbol
+                    elif symbol.isalpha():
+                        temp+=symbol
+                    else:
+                        return -5 # invalid character
                 else:
                     return -5 # invalid character
     return[table_name, column_names]

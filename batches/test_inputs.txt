@@ -1,4 +1,8 @@
 CREATE table (name, surname);
 INSERT INTO table (Mykhailo, Holub);
 INSERT table (Tom, Stone);
+INSERT table (Tom);
 SELECT FROM table;
+create table_01 (column_01, column_02);
+cReAtE 01_table (column_01, column_02);
+create table_02 (01_column, 02_column);
