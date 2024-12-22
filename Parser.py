@@ -1,215 +1,68 @@
 spaces = [' ', '\t', '\r', '\n']
 string_containers = ['"', "'"]
-eol = [";"]
+eol = ";"
 
+from parse_create import parse_create
+from parse_insert import parse_insert
+from parse_select import parse_select
 
-"""
-command syntax:
-Must start with COMMAND_CAPITAL_NAME
-Followed by other syntax structures:
-OBLIGATORY_KEYWORD
-{OPTIONAL_PHRASE_OR_WORD} # Parser will return True if this was inputted or False otherwise
-value 
-(n_of_vals_1,n_of_vals_2,...,leave empty for any number of values between commas) # Parser will return list of lists of values
-[OPTIONAL_KEYWORD (n_of_vals_b_c_1,n_of_vals_b_c_2,...,leave empty for any number of values between commas)] # Parser will return list of lists of values or None if keyword was not present
-
-
-
-"COMMAND_CAPITAL_NAME": "COMMAND_NAME {OPTIONAL_PHRASE_OR_WORD} value [OPTIONAL_KEYWORD value]"
-"""
+import sys
 
 commands = {
-    "CREATE": "CREATE table_name (1,2)",
-    "INSERT": "INSERT {INTO} table_name (1)",
-    "SELECT": "SELECT [(1)] FROM table_name [WHERE condition] [GROUP_BY (1)]"
+    "CREATE": parse_create,
+    "INSERT": parse_insert,
+    "SELECT": parse_select
 }
 
 def recive_input():
-    string = input(">>>")
-    while not any(s in string for s in eol):
-        new_line = "\n"+input("...")
+    patience = 100
+    string = input()
+    while not eol in string:
+        patience -= 1
+        if patience < 0:
+            print("Too many new lines, exiting")
+            exit()
+        print(".")
+        new_line = "\n"+input()
         if new_line == "\nRESET;":
-            print("<<<Resetting")
-            string = input(">>>")
+            print(">>>Resetting")
+            string = input()
             continue
         string += new_line
     return string
 
 def prepare_input(string):
     i = 0
-    while i < len(string):
-        if string[i] in spaces:
-            string = string[:i] + spaces[0] + string[i+1:]
-            if i > 0:
-                if string[i-1] == string[i]:
-                    string = string[:i-1]+string[i:]
-                    continue
-        if string[i] in eol:
-            string = string[:i]
-            break
-        i+=1
-    temp = ""
-    output = []
-    for symbol in string:
-        if symbol == " ":
-            output.append(temp)
-            temp = ""
-        else:
-            temp+=symbol
-    output.append(temp)
-    return output
+    if len(spaces) > 1:
+        for space in spaces[1:]:
+            while space in string:
+                string = string.replace(space, spaces[0])
+    while spaces[0] + spaces[0] in string:
+        string = string.replace(spaces[0] + spaces[0], spaces[0])
+
+    while string[0] == spaces[0]:
+        string = string[1:]
+    return string[:string.index(eol)]
 
 def parse(prepared_input, commands_dict):
-    if prepared_input[0] in commands_dict.keys(): # check if received command exists
-        args = {}
-        command = commands_dict[prepared_input[0]]
-        p_counter = 0
-        c_counter = 0
-        while p_counter < len(prepared_input): # while received command is not parsed
+    if not " " in prepared_input:
+        return -3 # no spaces == no such command
 
-            temp = ""
-            while c_counter<len(command): # move counter to next non-space character
-                match command[c_counter]:
-                    case " ":
-                        break
-                    case _:
-                        temp += command[c_counter]
-                        c_counter += 1
-            if temp.upper() == temp and not(all([not(i.isalpha()) for i in temp])): # if COMMAND_CAPITAL_NAME or OBLIGATORY_KEYWORD
-                if prepared_input[p_counter] == temp:
-                    p_counter += 1
-                    c_counter += 1
-                    continue
-                elif temp[0] == "{" and temp[-1] == "}":
-                    if prepared_input[p_counter] == temp[1:-1]:
-                        args[temp[1:-1]] = True
-                    else:
-                        args[temp[1:-1]] = False
-                elif temp[0] == "[" or temp[-1] in [")","]","}"]:
-                    pass
-                else:
-                    return -2
-            if temp.lower() == temp and not(all([not(i.isalpha()) for i in temp])): # if value
-                args[temp] = prepared_input[p_counter]
-                p_counter += 1
-                c_counter += 1
-                continue
+    c = 0 # prepared_input counter
 
-            if temp[0] == "(" and temp[-1] == ")": # if obligatory brackets
-                lengths = []
-                br_temp = ""
-                for symbol in temp:
-                    match symbol: # get valid numbers of values between commas
-                        case "(":
-                            continue
-                        case ",":
-                            lengths.append(int(br_temp))
-                            br_temp = ""
-                        case " ":
-                            continue
-                        case ")":
-                            lengths.append(int(br_temp))
-                            br_temp = ""
-                        case _:
-                            br_temp+=symbol
+    # determine which command was inputed
+    temp = ""
+    while prepared_input[c] != " ":
+        temp += prepared_input[c]
+        c += 1
 
-                br_temp = ""
-                bracket_content = [[]]
-                bracket_opened = True
-                while bracket_opened: # parse brackets in received command
-                    for symbol in prepared_input[p_counter]:
-                        match symbol:
-                            case "(":
-                                continue
-                            case " ":
-                                bracket_content[-1].append(br_temp)
-                                br_temp = ""
-                            case ",":
-                                bracket_content[-1].append(br_temp)
-                                br_temp = ""
-                                bracket_content.append([])
-                            case ")":
-                                bracket_content[-1].append(br_temp)
-                                br_temp = ""
-                                bracket_opened = False
+    if not temp.upper() in commands_dict.keys():
+        print(">>>", temp.upper())
+        return -2 # no such command
 
-                            case _:
-                                br_temp+=symbol
-                    if bracket_opened:
-                        p_counter += 1
-                if len(temp) > 2: # if valid numbers of values between commas were specified, conduct check whether --||-- satisfy said valid numbers
-                    for comma in bracket_content:
-                        if not len(comma) in lengths:
-                            return -3
-                if "brackets" in args.keys():
-                    args["brackets"].append(bracket_content)
-                else:
-                    args["brackets"] = bracket_content
-                p_counter += 1
-                c_counter += 1
-                continue
-
-            if temp[0:2] == "[(" and temp[-2:-1] == ")]": # if non-obligatory brackets
-                if not prepared_input[p_counter][0] == "(": # if no non-obligatory brackets are present in
-                    continue
-                lengths = []
-                br_temp = ""
-                for symbol in temp:
-                    match symbol: # get valid numbers of values between commas
-                        case "(":
-                            continue
-                        case "[":
-                            continue
-                        case ",":
-                            lengths.append(int(br_temp))
-                            br_temp = ""
-                        case " ":
-                            continue
-                        case ")":
-                            lengths.append(int(br_temp))
-                            br_temp = ""
-                        case _:
-                            br_temp+=symbol
-
-                br_temp = ""
-                bracket_content = [[]]
-                bracket_opened = True
-                while bracket_opened: # parse brackets in received command
-                    for symbol in prepared_input[p_counter]:
-                        match symbol:
-                            case "(":
-                                continue
-                            case "[":
-                                continue
-                            case " ":
-                                bracket_content[-1].append(br_temp)
-                                br_temp = ""
-                            case ",":
-                                bracket_content[-1].append(br_temp)
-                                br_temp = ""
-                                bracket_content.append([])
-                            case ")":
-                                bracket_content[-1].append(br_temp)
-                                br_temp = ""
-                                bracket_opened = False
-                            case _:
-                                br_temp+=symbol
-                    if bracket_opened:
-                        p_counter += 1
-                if len(temp) > 4: # if valid numbers of values between commas were specified, conduct check whether --||-- satisfy said valid numbers
-                    for comma in bracket_content:
-                        if not len(comma) in lengths:
-                            return -3
-                if "sq_brackets" in args.keys():
-                    args["sq_brackets"].append(bracket_content)
-                else:
-                    args["sq_brackets"] = bracket_content
-                p_counter += 1
-                c_counter += 1
-                continue
-
-
-
-        return args
+    # call command-specific parser
+    parsing_result = commands_dict[temp.upper()](prepared_input)
+    if isinstance(parsing_result, list):
+        return [temp.upper(),parsing_result]
     else:
-        return -1
+        return [temp.upper(), parsing_result]
