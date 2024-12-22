@@ -126,15 +126,40 @@ def parse(prepared_input, commands_dict):
                     # handle obligatory ()
                     else:
                         valid_lengths = []
+                        temp = ""
                         while command[c_c] != ")" and c_c < len(command):
-                            pass
+                            match command[c_c]:
+                                case " ":
+                                    if temp:
+                                        valid_lengths.append(int(temp))
+                                case _:
+                                    temp += command[c_c]
+                            c_c += 1
                         if c_c == len(command):
                             return -3.3  # example command has invalid bracket structure: brackets were never closed
 
+                        # parse input
+                        temp = ""
+                        values = [[]]
+                        while prepared_input[p_c] != ")" and p_c < len(prepared_input):
+                            match prepared_input[p_c]:
+                                case "(":
+                                    p_c += 1
+                                case " ":
+                                    if temp:
+                                        values[-1].append(temp)
+                                        temp = ""
+                                case ",":
+                                    if temp:
+                                        values[-1].append(temp)
+                                        temp = ""
+                                    values.append([])
+                        
+                                    
 
 
         # parse keywords
-        if command[c_c].isalpha() and command[c_c] == command[c_c].upper():
+        if (command[c_c].isalpa() or command[c_c] == "_") and command[c_c] == command[c_c].upper():
             while command[c_c] == prepared_input[p_c].uppercase():  # while input matches keyword
                 c_c += 1
                 p_c += 1
