@@ -25,44 +25,22 @@ def parse_insert(prepared_input):
         match symbol:
             case ",": # if comma:
                 if temp: # if temp is not empty:
-                    if temp[0] == '"' or temp[0] == "'": # if temp is a string:
-                        if temp[0] == temp[-1]: # if temp is a complete string, memorise it:
-                            values.append(temp)
-                            temp = ""
-                        else: # if temp is not a complete string, append comma as a character:
-                            temp+=symbol
-                    else: # if temp is not a string, memorise it:
-                        values.append(temp)
-                        temp = ""
+                    values.append(temp)
+                    temp = ""
                 else:
                     return -4 # wrong comma placement
                 continue
             case " " | "(": # if skipable:
-                if temp: # if temp is not empty:
-                    if temp[0] == '"' or temp[0] == "'": # if temp is a string:
-                        if temp[0] != temp[-1]: # if temp is not a complete string, append skipable as a character:
-                            temp += symbol
                 continue
             case ")":
-                if temp: # if temp is not empty:
-                    if temp[0] == '"' or temp[0] == "'": # if temp is a string:
-                        if temp[0] != temp[-1]: # if temp is not a complete string, append closing bracket as a character:
-                            temp += symbol
-                            continue
-                if temp: # otherwise end parsing
+                if temp: #end parsing
                     values.append(temp)
                     temp = ""
                 break
             case _:
-                if symbol.isalpha() or symbol.isdigit() or symbol in ["_", "'", '"']:
+                if symbol.isdigit() or symbol in ["-"]:
                     temp+=symbol
                     continue
-                if len(temp) > 0:
-                    if temp[0] == '"' or temp[0] == "'":
-                        if symbol != temp[0]:
-                            temp+=symbol
-                            continue
-
                 print(symbol)
                 return -5 # invalid character
     if temp:
