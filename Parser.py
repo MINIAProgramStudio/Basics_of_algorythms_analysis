@@ -36,7 +36,7 @@ def prepare_input(string):
     if len(spaces) > 1:
         for space in spaces[1:]:
             while space in string:
-                string.replace(space, spaces[0])
+                string = string.replace(space, spaces[0])
     while spaces[0] + spaces[0] in string:
         string = string.replace(spaces[0] + spaces[0], spaces[0])
 
