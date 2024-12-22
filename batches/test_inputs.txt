@@ -1,0 +1,4 @@
+CREATE table (name, surname);
+INSERT INTO table (Mykhailo, Holub);
+INSERT table (Tom, Stone);
+SELECT FROM table;

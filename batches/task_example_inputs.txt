@@ -1,0 +1,8 @@
+CREATE students (age, average_grade);
+CREATE measurements (id, height, weight);
+INSERT INTO measurements (1, 180, 75);
+INSERT measurements (2, 175, 72);
+SELECT FROM measurements;
+SELECT FROM measurements WHERE id = 1;
+SELECT COUNT(id), MAX(weight)  FROM measurements  GROUP_BY height;
+SELECT COUNT(id) FROM measurements WHERE height = 170 GROUP_BY weight;
