@@ -15,12 +15,18 @@ commands = {
 }
 
 def recive_input():
-    string = str(sys.stdin.buffer.readline())[2:-1]
+    patience = 100
+    string = input()
     while not any(s in string for s in eol):
-        new_line = "\n"+str(sys.stdin.buffer.readline())[2:-1]
+        patience -= 1
+        if patience < 0:
+            print("Too many new lines, exiting")
+            exit()
+        print(".")
+        new_line = "\n"+input()
         if new_line == "\nRESET;":
             print(">>>Resetting")
-            string = sys.stdin.buffer.readline()[2:-1]
+            string = input()
             continue
         string += new_line
     return string
@@ -32,7 +38,7 @@ def prepare_input(string):
             while space in string:
                 string.replace(space, spaces[0])
     while spaces[0] + spaces[0] in string:
-        string.replace(spaces[0] + spaces[0], spaces[0])
+        string = string.replace(spaces[0] + spaces[0], spaces[0])
 
     first_eol = len(string)
     for eol_s in eol:

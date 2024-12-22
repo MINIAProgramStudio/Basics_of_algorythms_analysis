@@ -27,7 +27,7 @@ class Table:
                     column = self.column_names.index(condition[0])
                     value = condition[1]
                     i = len(rows_to_return) - 1
-                    while i >0 :
+                    while i > 0 :
                         if not rows_to_return[i][column] == value:
                             rows_to_return.pop(i)
                         i-=1
@@ -67,7 +67,7 @@ class Table:
                             for row in raw_rows:
                                 grouped_row = [row[i] for i in group_by_columns]
                                 if len(rows_to_return[rows_for_search.index(grouped_row)]) < len(group_by_columns_names):
-                                    rows_to_return[rows_to_return.index(grouped_row)].append(row[column])
+                                    rows_to_return[rows_for_search.index(grouped_row)].append(row[column])
                                 else:
                                     rows_to_return[rows_for_search.index(grouped_row)][-1] = max(row[column], rows_to_return[rows_to_return.index(grouped_row)][-1])
                         case "AVG":

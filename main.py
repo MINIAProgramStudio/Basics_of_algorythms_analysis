@@ -1,12 +1,16 @@
 import Parser
 import Data_structure
 
+import PythonTableConsole as PTC
+
 Data = Data_structure.Data()
 
 while True:
     try:
         string = Parser.recive_input()
+
     except:
+        print("RECEIVE INPUT ERROR. Or end of input, I cant really tell")
         exit()
     if "EXIT" in string.upper() and len(string) < 7:
         break
@@ -58,9 +62,9 @@ while True:
                         case -4:
                             print(">>>EXECUTION ERROR: SELECT. No such aggregating function.")
                         case _:
-                            print(execution_result[0])
-                            for row in execution_result[1]:
-                                print(row)
+                            table = PTC.PythonTableConsole([execution_result[0]]+execution_result[1])
+                            table.transpose()
+                            print(table)
         else:
             match parsing_result[0]:
                 case "CREATE":
@@ -118,3 +122,4 @@ while True:
                 print(">>>FAILED TO PARSE. No such command.")
             case _:
                 print(">>>PARSING ERROR. Cant handle parsing result", parsing_result)
+print("end")

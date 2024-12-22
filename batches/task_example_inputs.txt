@@ -4,10 +4,5 @@ INSERT INTO measurements (1, 180, 75);
 INSERT measurements (2, 175, 72);
 SELECT FROM measurements;
 SELECT FROM measurements WHERE id = 1;
-SELECT COUNT(id), AVG(weight)
-  FROM measurements
-  GROUP_BY height;
-SELECT COUNT(id)
-  FROM measurements
-  WHERE height = 170
-  GROUP_BY weight;
+SELECT COUNT(id), MAX(weight)  FROM measurements  GROUP_BY height;
+SELECT COUNT(id) FROM measurements WHERE height = 170 GROUP_BY weight;
