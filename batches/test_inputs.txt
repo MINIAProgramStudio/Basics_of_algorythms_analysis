@@ -1,6 +1,6 @@
 CREATE table (X, Y);
 INSERT INTO table (1, 2);
-INSERT table (2, 1);
+INSERT table (-2, 1);
 INSERT table (1);
 SELECT FROM table;
 create table_01 (column_01, column_02);
