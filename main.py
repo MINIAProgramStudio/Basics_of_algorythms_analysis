@@ -10,7 +10,7 @@ while True:
         string = Parser.recive_input()
 
     except:
-        print("RECEIVE INPUT ERROR. Or end of input, I cant really tell")
+        print("RECEIVE INPUT ERROR. Or end of input, I can't really tell")
         exit()
     if "EXIT" in string.upper() and len(string) < 7:
         break
@@ -22,7 +22,7 @@ while True:
         print(">INSERT -- inserts row into existing table. Syntax sensitive: INSERT [INTO] table_name (N [, ...]);")
         continue
     prepared_input = Parser.prepare_input(string)
-    print("<<<" + prepared_input)
+    print(">>>Perceived input: " + prepared_input)
     parsing_result = Parser.parse(prepared_input, Parser.commands)
 
     if isinstance(parsing_result, list):

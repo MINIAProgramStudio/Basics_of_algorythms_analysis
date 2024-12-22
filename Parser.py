@@ -16,13 +16,13 @@ commands = {
 
 def recive_input():
     patience = 100
-    string = input()
+    string = input("<<<")
     while not eol in string:
         patience -= 1
         if patience < 0:
             print("Too many new lines, exiting")
             exit()
-        print(".")
+        print("...")
         new_line = "\n"+input()
         if new_line == "\nRESET;":
             print(">>>Resetting")
