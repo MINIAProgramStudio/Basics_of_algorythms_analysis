@@ -98,7 +98,7 @@ class Data:
         self.tables = {}
 
     def __str__(self):
-        output = "There are "+len(self.tables.keys())+" tables:"
+        output = "There are "+str(len(self.tables.keys()))+" tables:"
         for key in self.tables.keys():
             output += "\n"+key
         return output

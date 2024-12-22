@@ -6,6 +6,8 @@ from parse_create import parse_create
 from parse_insert import parse_insert
 from parse_select import parse_select
 
+import sys
+
 commands = {
     "CREATE": parse_create,
     "INSERT": parse_insert,
@@ -13,15 +15,15 @@ commands = {
 }
 
 def recive_input():
-    string = input("<<<")
+    string = str(sys.stdin.buffer.readline())
     while not any(s in string for s in eol):
         new_line = "\n"+input("...")
         if new_line == "\nRESET;":
             print(">>>Resetting")
-            string = input("<<<")
+            string = sys.stdin.buffer.readline()
             continue
         string += new_line
-    return string
+    return string[2:]
 
 def prepare_input(string):
     i = 0
@@ -56,6 +58,6 @@ def parse(prepared_input, commands_dict):
     # call command-specific parser
     parsing_result = commands_dict[temp.upper()](prepared_input)
     if isinstance(parsing_result, list):
-        return [temp.upper()]+parsing_result
+        return [temp.upper(),parsing_result]
     else:
         return [temp.upper(), parsing_result]

@@ -1,12 +1,9 @@
 import Parser
 import Data_structure
 
-import sys
-
 Data = Data_structure.Data()
 
 while True:
-    print()
     string = Parser.recive_input()
     if "EXIT" in string.upper() and len(string) < 7:
         break
@@ -18,6 +15,7 @@ while True:
         print(">INSERT -- inserts row into existing table. Syntax sensitive: INSERT [INTO] table_name (N [, ...]);")
         continue
     parsing_result = Parser.parse(Parser.prepare_input(string), Parser.commands)
+    print(parsing_result)
     if isinstance(parsing_result, list):
         if isinstance(parsing_result[1], list):
             match parsing_result[0]:
@@ -28,6 +26,8 @@ while True:
                             print(">>>Table was created successfully.")
                         case -2:
                             print(">>>EXECUTION ERROR: CREATE. Table already exists.")
+                        case _:
+                            print(">>>EXECUTION ERROR: CREATE. Cant handle execution result", execution_result)
                 case "INSERT":
                     execution_result = Data.insert(parsing_result[1][0], parsing_result[1][1])
                     match execution_result:
@@ -39,6 +39,8 @@ while True:
                             print(Data)
                         case -3:
                             print(">>>EXECUTION ERROR: INSERT. Invalid number of values")
+                        case _:
+                            print(">>>EXECUTION ERROR: INSERT. Cant handle execution result", execution_result)
                 case "SELECT":
                     execution_result = Data.select(parsing_result[1][0],parsing_result[1][1],parsing_result[1][2],parsing_result[1][3])
                     match execution_result:
@@ -67,6 +69,8 @@ while True:
                             print(">>>INVALID INPUT. Wrong comma placement")
                         case -5:
                             print(">>>INVALID INPUT. Invalid character.")
+                        case _:
+                            print(">>>PARSING ERROR: CREATE. Cant handle parsing result", parsing_result)
                 case "INSERT":
                     match parsing_result[1]:
                         case - 2:
@@ -81,6 +85,8 @@ while True:
                             print(">>>INVALID INPUT. Invalid character.")
                         case -6:
                             print(">>>INVALID INPUT. Parsing cycle finished wrong. Please check string's quotation marks.")
+                        case _:
+                            print(">>>PARSING ERROR: INSERT. Cant handle parsing result", parsing_result)
                 case "SELECT":
                     match parsing_result[1]:
                         case -2:
@@ -95,6 +101,8 @@ while True:
                             print(">>>INVALID INPUT. Must not have aggregation if GROUP_BY is not present.")
                         case -7:
                             print(">>>INVALID INPUT. Expecting = somewhere.")
+                        case _:
+                            print(">>>PARSING ERROR: SELECT. Cant handle parsing result", parsing_result)
 
     else:
         match parsing_result:
@@ -102,3 +110,5 @@ while True:
                 print(">>>INVALID INPUT. No spaces encountered. Must be at least one space.")
             case -2:
                 print(">>>FAILED TO PARSE. No such command.")
+            case _:
+                print(">>>PARSING ERROR. Cant handle parsing result", parsing_result)
