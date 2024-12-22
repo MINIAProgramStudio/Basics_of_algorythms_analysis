@@ -68,7 +68,7 @@ def parse(prepared_input, commands_dict):
 
     # call command-specific parser
     parsing_result = commands_dict[temp.upper()](prepared_input)
-    if isinstance(parse_result, list):
+    if isinstance(parsing_result, list):
         return [temp.upper()]+parsing_result
     else:
         return [temp.upper(), parsing_result]
