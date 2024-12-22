@@ -3,6 +3,7 @@ string_containers = ['"', "'"]
 eol = [";"]
 
 from parse_create import parse_create
+from parse_insert import parse_insert
 
 """
 command syntax:
@@ -21,17 +22,17 @@ value
 
 commands = {
     "CREATE": parse_create,
-    "INSERT": "INSERT {INTO} table_name (1)",
+    "INSERT": parse_insert,
     "SELECT": "SELECT [(1)] FROM table_name [WHERE condition] [GROUP_BY (1)]"
 }
 
 def recive_input():
-    string = input(">>>")
+    string = input("<<<")
     while not any(s in string for s in eol):
         new_line = "\n"+input("...")
         if new_line == "\nRESET;":
-            print("<<<Resetting")
-            string = input(">>>")
+            print(">>>Resetting")
+            string = input("<<<")
             continue
         string += new_line
     return string

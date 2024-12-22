@@ -1,5 +1,3 @@
-import os
-
 # CREATE table_name (column_name *[INDEXED] [, ...]);
 
 def parse_create(prepared_input):
@@ -20,21 +18,21 @@ def parse_create(prepared_input):
     temp = ""
     for symbol in prepared_input:
         match symbol:
-            case ",":
+            case ",": # if comma -- memorise column_name
                 if temp:
                     column_names.append(temp)
                     temp = ""
                 else:
                     return -4 # wrong comma placement
                 continue
-            case " " | "(":
+            case " " | "(": # skip spaces and opening brackets
                 continue
-            case ")":
+            case ")": # end on closing bracket
                 if temp:
                     column_names.append(temp)
                     temp = ""
                 break
-            case _:
+            case _: # add any other valid characters to temp
                 if symbol.isalpha() or symbol == "_":
                     temp+=symbol
                 else:
