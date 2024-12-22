@@ -1,6 +1,8 @@
 import Parser
 import Data_structure
 
+import sys
+
 Data = Data_structure.Data()
 
 while True:
@@ -36,7 +38,21 @@ while True:
                             print(">>>Existing tables:")
                             print(Data)
                         case -3:
-                            print("EXECUTION ERROR: INSERT. Invalid number of values")
+                            print(">>>EXECUTION ERROR: INSERT. Invalid number of values")
+                case "SELECT":
+                    execution_result = Data.select(parsing_result[1][0],parsing_result[1][1],parsing_result[1][2],parsing_result[1][3])
+                    match execution_result:
+                        case -2:
+                            print(">>>EXECUTION ERROR: SELECT. Specified table does not exist")
+                            print(">>>Existing tables:")
+                            print(Data)
+                        case -3:
+                            print(">>>EXECUTION ERROR: SELECT. No such column")
+                        case -4:
+                            print(">>>EXECUTION ERROR: SELECT. No such aggregating function")
+                        case _:
+                            for row in execution_result:
+                                print(row)
         else:
             match parsing_result[0]:
                 case "CREATE":
@@ -64,7 +80,21 @@ while True:
                         case -5:
                             print(">>>INVALID INPUT. Invalid character.")
                         case -6:
-                            print(">>>INVALID INPUT. Parsing cycle finished wrong. Please check string's quotation marks")
+                            print(">>>INVALID INPUT. Parsing cycle finished wrong. Please check string's quotation marks.")
+                case "SELECT":
+                    match parsing_result[1]:
+                        case -2:
+                            print(">>>INVALID INPUT. Not enough spaces encountered. Must be at least two spaces in SELECT.")
+                        case -3.1:
+                            print(">>>INVALID INPUT. Invalid brackets or spaces structure.")
+                        case -3.3:
+                            print(">>>INVALID INPUT. Closing bracket was encountered too soon.")
+                        case -5:
+                            print(">>>INVALID INPUT. Wrong comma placement.")
+                        case -6:
+                            print(">>>INVALID INPUT. Must not have aggregation if GROUP_BY is not present.")
+                        case -7:
+                            print(">>>INVALID INPUT. Expecting = somewhere.")
 
     else:
         match parsing_result:

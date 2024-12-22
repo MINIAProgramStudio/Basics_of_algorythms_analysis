@@ -4,26 +4,12 @@ eol = [";"]
 
 from parse_create import parse_create
 from parse_insert import parse_insert
-
-"""
-command syntax:
-Must start with COMMAND_CAPITAL_NAME
-Followed by other syntax structures:
-OBLIGATORY_KEYWORD
-{OPTIONAL_PHRASE_OR_WORD} # Parser will return True if this was inputted or False otherwise
-value 
-(n_of_vals_1, n_of_vals_2, ..., leave empty for any number of values between commas) # Parser will return list of lists of values
-[OPTIONAL_KEYWORD (n_of_vals_b_c_1,n_of_vals_b_c_2,...,leave empty for any number of values between commas)] # Parser will return list of lists of values or None if keyword was not present
-
-
-
-"COMMAND_CAPITAL_NAME": "COMMAND_NAME {OPTIONAL_PHRASE_OR_WORD} value [OPTIONAL_KEYWORD value]"
-"""
+from parse_select import parse_select
 
 commands = {
     "CREATE": parse_create,
     "INSERT": parse_insert,
-    "SELECT": "SELECT [(1)] FROM table_name [WHERE condition] [GROUP_BY (1)]"
+    "SELECT": parse_select
 }
 
 def recive_input():

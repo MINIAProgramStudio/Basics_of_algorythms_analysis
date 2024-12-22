@@ -12,8 +12,8 @@ def parse_select(prepared_input):
         return -2  # input is lacking spaces
 
     # Handle aggregation start\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-    if prepared_input[:6].upper() == "FROM ": # skip INTO if it is present
-        prepared_input = prepared_input[6:]
+    if prepared_input[:5].upper() == "FROM ": # skip INTO if it is present
+        prepared_input = prepared_input[5:]
         if not " " in prepared_input:
             return -2 # input is lacking spaces
     else:
@@ -82,8 +82,8 @@ def parse_select(prepared_input):
     prepared_input = prepared_input[prepared_input.index(" ") + 1:]  # crop table name
 
     # Handle WHERE start\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-    if prepared_input[:7].upper() == "WHERE ":
-        prepared_input = prepared_input[7:]
+    if prepared_input[:6].upper() == "WHERE ":
+        prepared_input = prepared_input[6:]
         condition = ["",""]
         c = 0
         # get column_1:
@@ -92,7 +92,7 @@ def parse_select(prepared_input):
             c += 1
         prepared_input = prepared_input[c:]
         if not "=" in prepared_input:
-            return -6 # expecting =
+            return -7 # expecting =
 
         prepared_input = prepared_input[prepared_input.index("=")]
         while prepared_input[0] == " ":
@@ -115,15 +115,18 @@ def parse_select(prepared_input):
 
 
     # Handle GROUP_BY start\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-    if prepared_input[:10].upper() == "GROUP_BY ":
-        prepared_input = prepared_input[10:]
+    if prepared_input[:9].upper() == "GROUP_BY ":
+        prepared_input = prepared_input[9:]
         group_by_columns = []
         temp = ""
         for symbol in prepared_input:
             match symbol:
                 case ",":
-                    group_by_columns.append(temp)
-                    temp = ""
+                    if temp:
+                        group_by_columns.append(temp)
+                        temp = ""
+                    else:
+                        return -5  # invalid comma placement
                 case " ":
                     continue
                 case _:
