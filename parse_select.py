@@ -11,11 +11,10 @@ def parse_select(prepared_input):
     if not " " in prepared_input:
         return -2  # input is lacking spaces
 
+
     # Handle aggregation start\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     if prepared_input[:5].upper() == "FROM ": # skip INTO if it is present
         prepared_input = prepared_input[5:]
-        if not " " in prepared_input:
-            return -2 # input is lacking spaces
     else:
         if not "GROUP_BY" in prepared_input.upper():
             return -6 # Must not have aggregation if GROUP_BY is not present
@@ -75,11 +74,12 @@ def parse_select(prepared_input):
 
         prepared_input = prepared_input[counter+1:] # crop prepared input from the end of FROM to the end of the string
     # Handle aggregation end///////////////////////////////////////////////////////////////////////////////////////////
-
-    if not " " in prepared_input:
-        return -2 # input is lacking spaces
-    table_name = prepared_input[:prepared_input.index(" ")] # get table name
-    prepared_input = prepared_input[prepared_input.index(" ") + 1:]  # crop table name
+    if " " in prepared_input:
+        table_name = prepared_input[:prepared_input.index(" ")] # get table name
+        prepared_input = prepared_input[prepared_input.index(" ") + 1:]  # crop table name
+    else:
+        table_name = prepared_input
+        return [table_name, aggregation, condition, group_by_columns]
 
     # Handle WHERE start\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     if prepared_input[:6].upper() == "WHERE ":

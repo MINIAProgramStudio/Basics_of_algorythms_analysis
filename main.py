@@ -4,7 +4,10 @@ import Data_structure
 Data = Data_structure.Data()
 
 while True:
-    string = Parser.recive_input()
+    try:
+        string = Parser.recive_input()
+    except:
+        exit()
     if "EXIT" in string.upper() and len(string) < 7:
         break
     if "HELP" in string.upper() and len(string) < 7:
@@ -15,7 +18,6 @@ while True:
         print(">INSERT -- inserts row into existing table. Syntax sensitive: INSERT [INTO] table_name (N [, ...]);")
         continue
     parsing_result = Parser.parse(Parser.prepare_input(string), Parser.commands)
-    print(parsing_result)
     if isinstance(parsing_result, list):
         if isinstance(parsing_result[1], list):
             match parsing_result[0]:
@@ -32,7 +34,7 @@ while True:
                     execution_result = Data.insert(parsing_result[1][0], parsing_result[1][1])
                     match execution_result:
                         case 0:
-                            print(">>>Insertion was successful")
+                            print(">>>Insertion was successful.")
                         case -2:
                             print(">>>EXECUTION ERROR: INSERT. Specified table does not exist")
                             print(">>>Existing tables:")
@@ -45,15 +47,16 @@ while True:
                     execution_result = Data.select(parsing_result[1][0],parsing_result[1][1],parsing_result[1][2],parsing_result[1][3])
                     match execution_result:
                         case -2:
-                            print(">>>EXECUTION ERROR: SELECT. Specified table does not exist")
+                            print(">>>EXECUTION ERROR: SELECT. Specified table does not exist.")
                             print(">>>Existing tables:")
                             print(Data)
                         case -3:
-                            print(">>>EXECUTION ERROR: SELECT. No such column")
+                            print(">>>EXECUTION ERROR: SELECT. No such column.")
                         case -4:
-                            print(">>>EXECUTION ERROR: SELECT. No such aggregating function")
+                            print(">>>EXECUTION ERROR: SELECT. No such aggregating function.")
                         case _:
-                            for row in execution_result:
+                            print(execution_result[0])
+                            for row in execution_result[1]:
                                 print(row)
         else:
             match parsing_result[0]:

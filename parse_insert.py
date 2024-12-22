@@ -5,8 +5,8 @@ def parse_insert(prepared_input):
     if not " " in prepared_input:
         return -2 # input is lacking spaces
 
-    if prepared_input[:6].upper() == "INTO ": # skip INTO if it is present
-        prepared_input = prepared_input[6:]
+    if prepared_input[:5].upper() == "INTO ": # skip INTO if it is present
+        prepared_input = prepared_input[5:]
         if not " " in prepared_input:
             return -2 # input is lacking spaces
 

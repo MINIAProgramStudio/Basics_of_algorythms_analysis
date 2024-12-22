@@ -86,7 +86,7 @@ class Table:
                         case _:
                             return -4 # no such function
             # end if aggregation///////////////////////////////////////////////////////////////////////////////////////
-        return rows_to_return
+        return [group_by_columns_names, rows_to_return]
 
 
 
