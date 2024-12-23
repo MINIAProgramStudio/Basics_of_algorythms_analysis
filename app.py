@@ -2,6 +2,8 @@ import Parser
 import Data_structure
 
 import PythonTableConsole as PTC
+import sys
+sys.setrecursionlimit(10**6)
 
 Data = Data_structure.Data()
 
@@ -25,7 +27,7 @@ if __name__ == "__main__":
         prepared_input = Parser.prepare_input(string)
         print(">>>Perceived input: " + prepared_input)
         parsing_result = Parser.parse(prepared_input, Parser.commands)
-        print(parsing_result)
+        # print(parsing_result)
 
         if isinstance(parsing_result, list):
             if isinstance(parsing_result[1], list):
