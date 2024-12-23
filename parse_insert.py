@@ -25,7 +25,7 @@ def parse_insert(prepared_input):
         match symbol:
             case ",": # if comma:
                 if temp: # if temp is not empty:
-                    values.append(temp)
+                    values.append(int(temp))
                     temp = ""
                 else:
                     return -4 # wrong comma placement

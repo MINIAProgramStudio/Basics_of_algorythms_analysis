@@ -64,6 +64,7 @@ def parse_create(prepared_input):
             return -5  # invalid character
         column_names.append(column_name)
         indexing.append(indexed)
+        return [table_name, column_names, indexing]
     else:
         temp = ""
         for symbol in prepared_input:
@@ -93,7 +94,8 @@ def parse_create(prepared_input):
                             return -5  # invalid character
                     else:
                         return -5  # invalid character
-    return [table_name, column_names, indexing]
+        return [table_name, column_names, False]
+
 
 
 

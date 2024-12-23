@@ -104,7 +104,7 @@ class Table:
 
 
     def select(self, aggregation = False, condition = False, group_by_columns = False):
-
+        rows_to_return = []
         if condition:
             if condition[0] in self.column_names:
                 if condition[1] in self.column_names:
@@ -130,6 +130,8 @@ class Table:
                             i-=1
             else:
                 return -3 # no such column
+        else:
+            rows_to_return = copy.deepcopy(self.rows)
         # end if condition////////////////////////////////////////////////////////////////////////////////////////////
 
         if group_by_columns:

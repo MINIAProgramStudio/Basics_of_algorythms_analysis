@@ -89,15 +89,11 @@ def parse_select(prepared_input):
         if not "=" in prepared_input:
             return -7 # expecting =
 
-        prepared_input = prepared_input[prepared_input.index("=")]
+        prepared_input = prepared_input[prepared_input.index("=")+1:]
         while prepared_input[0] == " ":
             prepared_input = prepared_input[1:]
 
         end_symbol = " "
-        if prepared_input[0] == "'" or prepared_input[0] == '"':
-            end_symbol = prepared_input[0]
-            prepared_input = prepared_input[1:]
-
         c = 0
         for symbol in prepared_input:
             c += 1
