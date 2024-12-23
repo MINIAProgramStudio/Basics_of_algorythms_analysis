@@ -12,7 +12,7 @@ ERROR = False
 time_c = 10**3
 
 
-number_of_random_values = [2**i for i in range(1,11)]
+number_of_random_values = [2**i for i in range(1,17)]
 measurements = [["number of values", "time to insert into plain", "time to insert into indexed",
                 "= plain", "= indexed", "> plain", "> indexed"]]
 values = []

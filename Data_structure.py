@@ -124,22 +124,34 @@ class TreeNode:
 
 
     def rotate_left(self):
-        if isinstance(self.parent, TreeNode) and self.left is None:
-            parent = copy.deepcopy(self.parent)
-            grand_parent = self.parent.parent
-            self.parent = grand_parent
-            parent.right = None
-            parent.parent = self
-            self.left = parent
+        new_root = self.right
+        self.right = new_root.left
+        if new_root.left:
+            new_root.left.parent = self
+        new_root.parent = self.parent
+        if self.parent is None:
+            pass # Root node case
+        elif self == self.parent.left:
+            self.parent.left = new_root
+        else:
+            self.parent.right = new_root
+        new_root.left = self
+        self.parent = new_root
 
     def rotate_right(self):
-        if isinstance(self.parent, TreeNode) and self.right is None:
-            parent = copy.deepcopy(self.parent)
-            grand_parent = self.parent.parent
-            self.parent = grand_parent
-            parent.left = None
-            parent.parent = self
-            self.right = parent
+        new_root = self.left
+        self.left = new_root.right
+        if new_root.right:
+            new_root.right.parent = self
+        new_root.parent = self.parent
+        if self.parent is None:
+            pass # Root node case
+        elif self == self.parent.right:
+            self.parent.right = new_root
+        else:
+            self.parent.left = new_root
+        new_root.right = self
+        self.parent = new_root
 
 
 class BinarySearchTree:
@@ -185,38 +197,30 @@ class Table:
 
 
     def select(self, aggregation = False, condition = False, group_by_columns = False):
-        rows_to_return = []
+        rows_to_return = [[]]*len(self.rows)
         if condition:
             if condition[0] in self.column_names:
                 if condition[1] in self.column_names:
                     match condition[2]:
                         case "=":
-                            rows_to_return = copy.deepcopy(self.rows)
                             column_1 = self.column_names.index(condition[0])
                             column_2 = self.column_names.index(condition[1])
-                            i = len(rows_to_return) - 1
-                            while i >= 0:
-                                if not rows_to_return[i][column_1] == rows_to_return[i][column_2]:
-                                    rows_to_return.pop(i)
-                                i -= 1
+                            for i in range(len(self.rows)):
+                                if self.rows[i][column_1] == self.rows[i][column_2]:
+                                    rows_to_return[rows_to_return.index([])] = self.rows[i]
                         case ">":
-                            rows_to_return = copy.deepcopy(self.rows)
                             column_1 = self.column_names.index(condition[0])
                             column_2 = self.column_names.index(condition[1])
-                            i = len(rows_to_return) - 1
-                            while i >= 0:
-                                if not rows_to_return[i][column_1] > rows_to_return[i][column_2]:
-                                    rows_to_return.pop(i)
-                                i -= 1
+                            for i in range(len(self.rows)):
+                                if self.rows[i][column_1] > self.rows[i][column_2]:
+                                    rows_to_return[rows_to_return.index([])] = self.rows[i]
                         case "<":
                             rows_to_return = copy.deepcopy(self.rows)
                             column_1 = self.column_names.index(condition[0])
                             column_2 = self.column_names.index(condition[1])
-                            i = len(rows_to_return) - 1
-                            while i >= 0:
-                                if not rows_to_return[i][column_1] < rows_to_return[i][column_2]:
-                                    rows_to_return.pop(i)
-                                i -= 1
+                            for i in range(len(self.rows)):
+                                if self.rows[i][column_1] < self.rows[i][column_2]:
+                                    rows_to_return[rows_to_return.index([])] = self.rows[i]
 
                 else:
                     match condition[2]:
@@ -227,19 +231,13 @@ class Table:
                                 if self.indexing[column]:
                                     rows_to_return = copy.deepcopy(self.indexing[column].equal(value))
                                 else:
-                                    rows_to_return = copy.deepcopy(self.rows)
-                                    i = len(rows_to_return) - 1
-                                    while i >= 0:
-                                        if not rows_to_return[i][column] == value:
-                                            rows_to_return.pop(i)
-                                        i -= 1
+                                    for i in range(len(self.rows)):
+                                        if self.rows[i][column] == value:
+                                            rows_to_return[rows_to_return.index([])] = self.rows[i]
                             else:
-                                rows_to_return = copy.deepcopy(self.rows)
-                                i = len(rows_to_return) - 1
-                                while i >= 0 :
-                                    if not rows_to_return[i][column] == value:
-                                        rows_to_return.pop(i)
-                                    i-=1
+                                for i in range(len(self.rows)):
+                                    if self.rows[i][column] == value:
+                                        rows_to_return[rows_to_return.index([])] = self.rows[i]
                         case ">":
                             column = self.column_names.index(condition[0])
                             value = int(condition[1])
@@ -247,19 +245,13 @@ class Table:
                                 if self.indexing[column]:
                                     rows_to_return = copy.deepcopy(self.indexing[column].greater_than(value))
                                 else:
-                                    rows_to_return = copy.deepcopy(self.rows)
-                                    i = len(rows_to_return) - 1
-                                    while i >= 0:
-                                        if not rows_to_return[i][column] > value:
-                                            rows_to_return.pop(i)
-                                        i -= 1
+                                    for i in range(len(self.rows)):
+                                        if self.rows[i][column] > value:
+                                            rows_to_return[rows_to_return.index([])] = self.rows[i]
                             else:
-                                rows_to_return = copy.deepcopy(self.rows)
-                                i = len(rows_to_return) - 1
-                                while i >= 0:
-                                    if not rows_to_return[i][column] > value:
-                                        rows_to_return.pop(i)
-                                    i -= 1
+                                for i in range(len(self.rows)):
+                                    if self.rows[i][column] > value:
+                                        rows_to_return[rows_to_return.index([])] = self.rows[i]
                         case "<":
                             column = self.column_names.index(condition[0])
                             value = int(condition[1])
@@ -267,23 +259,20 @@ class Table:
                                 if self.indexing[column]:
                                     rows_to_return = copy.deepcopy(self.indexing[column].less_than(value))
                                 else:
-                                    rows_to_return = copy.deepcopy(self.rows)
-                                    i = len(rows_to_return) - 1
-                                    while i >= 0:
-                                        if not rows_to_return[i][column] < value:
-                                            rows_to_return.pop(i)
-                                        i -= 1
+                                    for i in range(len(self.rows)):
+                                        if self.rows[i][column] < value:
+                                            rows_to_return[rows_to_return.index([])] = self.rows[i]
                             else:
-                                rows_to_return = copy.deepcopy(self.rows)
-                                i = len(rows_to_return) - 1
-                                while i >= 0:
-                                    if not rows_to_return[i][column] < value:
-                                        rows_to_return.pop(i)
-                                    i -= 1
+                                for i in range(len(self.rows)):
+                                    if self.rows[i][column] < value:
+                                        rows_to_return[rows_to_return.index([])] = self.rows[i]
             else:
                 return -3 # no such column
+            if [] in rows_to_return:
+                rows_to_return = rows_to_return[:rows_to_return.index([])]
         else:
             rows_to_return = copy.deepcopy(self.rows)
+
         # end if condition////////////////////////////////////////////////////////////////////////////////////////////
 
         if group_by_columns:
