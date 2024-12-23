@@ -25,7 +25,7 @@ class Table:
                         i -= 1
                 else:
                     column = self.column_names.index(condition[0])
-                    value = condition[1]
+                    value = int(condition[1])
                     i = len(rows_to_return) - 1
                     while i > 0 :
                         if not rows_to_return[i][column] == value:

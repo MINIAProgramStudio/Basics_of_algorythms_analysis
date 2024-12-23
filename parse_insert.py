@@ -46,5 +46,5 @@ def parse_insert(prepared_input):
                 print(symbol)
                 return -5 # invalid character
     if temp:
-        return -6 # string was never ended
+        return -6 # brackets were never closed
     return [table_name, values]

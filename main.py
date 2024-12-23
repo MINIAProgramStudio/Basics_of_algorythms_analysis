@@ -94,7 +94,7 @@ while True:
                         case -5:
                             print(">>>INVALID INPUT. Invalid character.")
                         case -6:
-                            print(">>>INVALID INPUT. Parsing cycle finished wrong. Please check string's quotation marks.")
+                            print(">>>INVALID INPUT. Parsing cycle finished wrong. Brackets were never closed.")
                         case -7:
                             print("INVALID INPUT. No digits after minus found")
                         case _:
