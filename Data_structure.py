@@ -90,6 +90,8 @@ class Table:
                     self.indexing.append(BinarySearchTree())
                 else:
                     self.indexing.append(False)
+        else:
+            self.indexing = False
         self.rows = []
     def __str__(self):
         output = str(self.column_names)
@@ -119,8 +121,16 @@ class Table:
                 else:
                     column = self.column_names.index(condition[0])
                     value = int(condition[1])
-                    if self.indexing[column]:
-                        rows_to_return = copy.deepcopy(self.indexing[column].equal(value))
+                    if self.indexing:
+                        if self.indexing[column]:
+                            rows_to_return = copy.deepcopy(self.indexing[column].equal(value))
+                        else:
+                            rows_to_return = copy.deepcopy(self.rows)
+                            i = len(rows_to_return) - 1
+                            while i > 0:
+                                if not rows_to_return[i][column] == value:
+                                    rows_to_return.pop(i)
+                                i -= 1
                     else:
                         rows_to_return = copy.deepcopy(self.rows)
                         i = len(rows_to_return) - 1

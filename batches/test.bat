@@ -1,2 +1,2 @@
-python ..\main.py < test_inputs.txt
+python ..\app.py < test_inputs.txt
 pause
