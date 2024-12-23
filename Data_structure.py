@@ -84,7 +84,12 @@ class Table:
     def __init__(self, column_names, indexing = False):
         self.column_names = column_names
         if indexing:
-            self.indexing = indexing
+            self.indexing = []
+            for index in indexing:
+                if index:
+                    self.indexing.append(BinarySearchTree())
+                else:
+                    self.indexing.append(False)
         self.rows = []
     def __str__(self):
         output = str(self.column_names)
@@ -92,6 +97,11 @@ class Table:
         return output
     def insert(self, row):
         self.rows.append(row)
+        if self.indexing:
+            for column in range(len(self.column_names)):
+                if self.indexing[column]:
+                    self.indexing[column].append(self.rows[-1], row[column])
+
 
     def select(self, aggregation = False, condition = False, group_by_columns = False):
         rows_to_return = copy.deepcopy(self.rows)
