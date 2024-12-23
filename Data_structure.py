@@ -1,11 +1,34 @@
 import copy
 
 class TreeNode:
-    def __init__(self, value, pointers = [], left = None, right = None):
+    def __init__(self, value, parent = None, pointers = [], left = None, right = None):
+        self.parent = parent
         self.value = value
         self.pointers  = pointers
         self.left = left
         self.right = right
+    def height(self):
+        if self.right is None:
+            if self.left is None:
+                return 1
+            else:
+                return self.left.height() + 1
+        else:
+            if self.left is None:
+                return self.right.height() + 1
+            else:
+                return max(self.right.height(), self.left.height()) + 1
+    def balance_factor(self):
+        if self.right is None:
+            if self.left is None:
+                return 0
+            else:
+                return -self.left.height()
+        else:
+            if self.left is None:
+                return self.right.height()
+            else:
+                return self.right.height() - self.left.height()
     def all(self):
         if self.left is None:
             if self.right is None:
@@ -53,26 +76,77 @@ class TreeNode:
             else:
                 return self.pointers + self.right.greater_than(value)
     def add_pointer(self,pointer,value):
+        balancing_needed = 0
         if value == self.value:
             if not pointer in self.pointers:
                 self.pointers.append(pointer)
+                return 0
         elif value < self.value:
             if self.left is None:
-                self.left = TreeNode(value,[pointer])
+                self.left = TreeNode(value, parent =  self, pointers = [pointer])
+                return 1
             else:
-                self.left.add_pointer(pointer,value)
+                balancing_needed = self.left.add_pointer(pointer,value)
+
         else:
             if self.right is None:
-                self.right = TreeNode(value,[pointer])
+                self.right = TreeNode(value, parent =  self, pointers = [pointer])
+                return 1
             else:
-                self.right.add_pointer(pointer,value)
+                balancing_needed = self.right.add_pointer(pointer,value)
+
+        if balancing_needed == 0:
+            return 0
+
+        bf = self.balance_factor()
+        if bf == 0:
+            return 0
+        if bf == 1:
+            return 1
+
+        if bf > 0:
+            if self.right.left is None:
+                self.right.rotate_left()
+            else:
+                self.right.rotate_right()
+                self.right.rotate_left()
+        else:
+            if self.left.right is None:
+                self.left.rotate_right()
+            else:
+                self.left.rotate_left()
+                self.left.rotate_right()
+
+        return 1
+
+
+
+
+    def rotate_left(self):
+        if isinstance(self.parent, TreeNode) and self.left is None:
+            parent = copy.deepcopy(self.parent)
+            grand_parent = self.parent.parent
+            self.parent = grand_parent
+            parent.right = None
+            parent.parent = self
+            self.left = parent
+
+    def rotate_right(self):
+        if isinstance(self.parent, TreeNode) and self.right is None:
+            parent = copy.deepcopy(self.parent)
+            grand_parent = self.parent.parent
+            self.parent = grand_parent
+            parent.left = None
+            parent.parent = self
+            self.right = parent
+
 
 class BinarySearchTree:
     def __init__(self):
         self.root = None
     def append(self, pointer, value):
         if self.root is None:
-            self.root = TreeNode(value, [pointer])
+            self.root = TreeNode(value, None, [pointer])
         else:
             self.root.add_pointer(pointer, value)
 
