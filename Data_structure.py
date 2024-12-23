@@ -104,10 +104,11 @@ class Table:
 
 
     def select(self, aggregation = False, condition = False, group_by_columns = False):
-        rows_to_return = copy.deepcopy(self.rows)
+
         if condition:
             if condition[0] in self.column_names:
                 if condition[1] in self.column_names:
+                    rows_to_return = copy.deepcopy(self.rows)
                     column_1 = self.column_names.index(condition[0])
                     column_2 = self.column_names.index(condition[1])
                     i = len(rows_to_return) - 1
@@ -118,11 +119,15 @@ class Table:
                 else:
                     column = self.column_names.index(condition[0])
                     value = int(condition[1])
-                    i = len(rows_to_return) - 1
-                    while i > 0 :
-                        if not rows_to_return[i][column] == value:
-                            rows_to_return.pop(i)
-                        i-=1
+                    if self.indexing[column]:
+                        rows_to_return = copy.deepcopy(self.indexing[column].equal(value))
+                    else:
+                        rows_to_return = copy.deepcopy(self.rows)
+                        i = len(rows_to_return) - 1
+                        while i > 0 :
+                            if not rows_to_return[i][column] == value:
+                                rows_to_return.pop(i)
+                            i-=1
             else:
                 return -3 # no such column
         # end if condition////////////////////////////////////////////////////////////////////////////////////////////
