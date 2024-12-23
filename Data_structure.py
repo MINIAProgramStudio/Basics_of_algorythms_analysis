@@ -7,12 +7,16 @@ class TreeNode:
         self.left = left
         self.right = right
     def all(self):
-        output = self.pointers
-        if not self.left is None:
-            output += self.left.all()
-        if not self.right is None:
-            output += self.right.all()
-        return output
+        if self.left is None:
+            if self.right is None:
+                return self.pointers
+            else:
+                return self.pointers + self.right.all()
+        else:
+            if self.right is None:
+                return self.pointers + self.left.all()
+            else:
+                return self.pointers + self.left.all() + self.right.all()
     def equal(self, value):
         if value == self.value:
             return self.pointers
@@ -39,15 +43,15 @@ class TreeNode:
             return output
     def greater_than(self, value):
         if value > self.value:
-            output = self.pointers
-            if not self.right is None:
-                output += self.right.all()
-            return output
+            if self.right is None:
+                return self.pointers
+            else:
+                return self.pointers + self.right.all()
         else:
-            output = []
-            if not self.right is None:
-                output += self.right.greater_than(value)
-            return output
+            if self.right is None:
+                return []
+            else:
+                return self.pointers + self.right.greater_than(value)
     def add_pointer(self,pointer,value):
         if value == self.value:
             if not pointer in self.pointers:
