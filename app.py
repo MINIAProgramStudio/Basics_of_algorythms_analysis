@@ -116,7 +116,7 @@ if __name__ == "__main__":
                             case -6:
                                 print(">>>INVALID INPUT. Must not have aggregation if GROUP_BY is not present.")
                             case -7:
-                                print(">>>INVALID INPUT. Expecting = somewhere.")
+                                print(">>>INVALID INPUT. Wrong placement of =, < or >")
                             case _:
                                 print(">>>PARSING ERROR: SELECT. Cant handle parsing result", parsing_result)
 
