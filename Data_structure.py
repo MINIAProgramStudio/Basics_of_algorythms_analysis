@@ -1,4 +1,5 @@
 import copy
+import time
 
 class TreeNode:
     def __init__(self, value, parent = None, pointers = [], left = None, right = None):
@@ -99,24 +100,24 @@ class TreeNode:
             return 0
 
         bf = self.balance_factor()
+
+
         if bf == 0:
             return 0
         if bf == 1:
             return 1
-
         if bf > 0:
             if self.right.left is None:
                 self.right.rotate_left()
             else:
                 self.right.rotate_right()
-                self.right.rotate_left()
+                self.right.parent.rotate_left()
         else:
             if self.left.right is None:
                 self.left.rotate_right()
             else:
                 self.left.rotate_left()
-                self.left.rotate_right()
-
+                self.left.parent.rotate_right()
         return 1
 
 
