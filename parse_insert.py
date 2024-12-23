@@ -34,11 +34,13 @@ def parse_insert(prepared_input):
                 continue
             case ")":
                 if temp: #end parsing
-                    values.append(temp)
+                    if temp == "-":
+                        return -7 # no digits after minus
+                    values.append(int(temp))
                     temp = ""
                 break
             case _:
-                if symbol.isdigit() or symbol in ["-"]:
+                if symbol.isdigit() or (not temp and symbol in ["-"]):
                     temp+=symbol
                     continue
                 print(symbol)

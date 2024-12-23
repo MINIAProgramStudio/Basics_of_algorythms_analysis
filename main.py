@@ -95,6 +95,8 @@ while True:
                             print(">>>INVALID INPUT. Invalid character.")
                         case -6:
                             print(">>>INVALID INPUT. Parsing cycle finished wrong. Please check string's quotation marks.")
+                        case -7:
+                            print("INVALID INPUT. No digits after minus found")
                         case _:
                             print(">>>PARSING ERROR: INSERT. Cant handle parsing result", parsing_result)
                 case "SELECT":
