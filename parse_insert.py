@@ -25,7 +25,7 @@ def parse_insert(prepared_input):
         match symbol:
             case ",": # if comma:
                 if temp: # if temp is not empty:
-                    values.append(temp)
+                    values.append(int(temp))
                     temp = ""
                 else:
                     return -4 # wrong comma placement
@@ -46,5 +46,5 @@ def parse_insert(prepared_input):
                 print(symbol)
                 return -5 # invalid character
     if temp:
-        return -6 # string was never ended
+        return -6 # brackets were never closed
     return [table_name, values]

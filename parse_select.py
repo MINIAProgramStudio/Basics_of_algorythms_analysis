@@ -79,25 +79,27 @@ def parse_select(prepared_input):
     # Handle WHERE start\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     if prepared_input[:6].upper() == "WHERE ":
         prepared_input = prepared_input[6:]
-        condition = ["",""]
+        condition = ["","",""]
         c = 0
         # get column_1:
         while prepared_input[c].isalpha() or prepared_input[c].isdigit() or prepared_input[c] == "_":
             condition[0] += prepared_input[c]
             c += 1
         prepared_input = prepared_input[c:]
-        if not "=" in prepared_input:
-            return -7 # expecting =
+        if prepared_input[0] == " ":
+            prepared_input = prepared_input[1:]
 
-        prepared_input = prepared_input[prepared_input.index("=")]
+        action = prepared_input[0]
+        if not action in "=<>":
+            return -7 # no comparasion sign found
+
+        condition[2] = action
+
+        prepared_input = prepared_input[1:]
         while prepared_input[0] == " ":
             prepared_input = prepared_input[1:]
 
         end_symbol = " "
-        if prepared_input[0] == "'" or prepared_input[0] == '"':
-            end_symbol = prepared_input[0]
-            prepared_input = prepared_input[1:]
-
         c = 0
         for symbol in prepared_input:
             c += 1
