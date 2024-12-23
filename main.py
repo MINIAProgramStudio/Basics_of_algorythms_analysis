@@ -29,12 +29,14 @@ while True:
         if isinstance(parsing_result[1], list):
             match parsing_result[0]:
                 case "CREATE":
-                    execution_result = Data.create(parsing_result[1][0],parsing_result[1][1])
+                    execution_result = Data.create(parsing_result[1][0],parsing_result[1][1][0], parsing_result[1][1][1])
                     match execution_result:
                         case 0:
                             print(">>>Table was created successfully.")
                         case -2:
                             print(">>>EXECUTION ERROR: CREATE. Table already exists.")
+                        case -3:
+                            preint(">>>EXECUTION ERROR: CREATE. Number of column names and number of values in indexing list must match")
                         case _:
                             print(">>>EXECUTION ERROR: CREATE. Cant handle execution result", execution_result)
                 case "INSERT":

@@ -1,8 +1,10 @@
 import copy
 
 class Table:
-    def __init__(self, column_names):
+    def __init__(self, column_names, indexing = False):
         self.column_names = column_names
+        if indexing:
+            self.indexing = indexing
         self.rows = []
     def __str__(self):
         output = str(self.column_names)
@@ -107,10 +109,13 @@ class Data:
             output += "\n"+key
         return output
 
-    def create(self, table_name, column_names):
+    def create(self, table_name, column_names, indexing = False):
         if table_name in self.tables.keys():
             return -2 # table already exists
-        self.tables[table_name] = Table(column_names)
+        if indexing:
+            if len(indexing) != len(column_names):
+                return -3 # number of column names and number of values in indexing list must match
+        self.tables[table_name] = Table(column_names, indexing)
         return 0
 
     def insert(self, table_name, values):

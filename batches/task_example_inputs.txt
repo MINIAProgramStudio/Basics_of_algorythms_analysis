@@ -1,5 +1,5 @@
 CREATE students (age, average_grade);
-CREATE measurements (id, height, weight);
+CREATE measurements (id INDEXED, height INDEXED, weight);
 INSERT INTO measurements (1, 180, 75);
 INSERT measurements (2, 175, 72);
 SELECT FROM measurements;
