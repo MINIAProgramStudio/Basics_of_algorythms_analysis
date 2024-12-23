@@ -2,6 +2,7 @@ import Parser
 import Data_structure
 
 import PythonTableConsole as PTC
+import sys
 sys.setrecursionlimit(10**6)
 
 Data = Data_structure.Data()
