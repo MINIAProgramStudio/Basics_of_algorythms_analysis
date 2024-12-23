@@ -1,5 +1,85 @@
 import copy
 
+class TreeNode:
+    def __init__(self, value, pointers = [], left = None, right = None):
+        self.value = value
+        self.pointers  = pointers
+        self.left = left
+        self.right = right
+    def all(self):
+        output = self.pointers
+        if not self.left is None:
+            output += self.left.all()
+        if not self.right is None:
+            output += self.right.all()
+        return output
+    def equal(self, value):
+        if value == self.value:
+            return self.pointers
+        elif value < self.value:
+            if self.left is None:
+                return []
+            else:
+                return self.left.equal(None)
+        else:
+            if self.right is None:
+                return []
+            else:
+                return self.right.equal(None)
+    def less_than(self, value):
+        if value > self.value:
+            output = self.pointers
+            if not self.left is None:
+                output += self.left.all()
+            return output
+        else:
+            output = []
+            if not self.left is None:
+                output += self.left.less_than(value)
+            return output
+    def greater_than(self, value):
+        if value > self.value:
+            output = self.pointers
+            if not self.right is None:
+                output += self.right.all()
+            return output
+        else:
+            output = []
+            if not self.right is None:
+                output += self.right.greater_than(value)
+            return output
+    def add_pointer(self,pointer,value):
+        if value == self.value:
+            if not pointer in self.pointers:
+                self.pointers.append(pointer)
+        elif value < self.value:
+            if self.left is None:
+                self.left = TreeNode(value,[pointer])
+            else:
+                self.left.add_pointer(pointer,value)
+        else:
+            if self.right is None:
+                self.right = TreeNode(value,[pointer])
+            else:
+                self.right.add_pointer(pointer,value)
+
+class BinarySearchTree:
+    def __init__(self):
+        self.root = None
+    def append(self, pointer, value):
+        if self.root is None:
+            self.root = TreeNode(value, [pointer])
+        else:
+            self.root.add_pointer(pointer, value)
+
+    def equal(self, value):
+        return self.root.equal(value)
+    def greater_than(self, value):
+        return self.root.greater_than(value)
+    def less_than(self,value):
+        return self.root.greater_than
+
+
 class Table:
     def __init__(self, column_names, indexing = False):
         self.column_names = column_names
