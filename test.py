@@ -8,7 +8,7 @@ Database = Data()
 ERROR = False
 
 
-number_of_random_values = [10**i for i in range(1,6)]
+number_of_random_values = [10**i for i in range(1,5)]
 measurements = [["number of values", "time to insert into plain", "time to insert into indexed",
                 "= plain", "= indexed", "> plain", "> indexed"]]
 values = []
