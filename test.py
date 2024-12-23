@@ -11,6 +11,20 @@ Database = Data()
 ERROR = False
 time_c = 10**3
 
+def parse_time(time_in):
+    if time_in < 10**(-9):
+        return "instant"
+    if time_in < 10**(-6):
+        return str(int(time_in*10**12)/10**3)+"ns"
+    if time_in < 10 ** (-3):
+        return str(int(time_in * 10 ** 9) / 10 ** 3) + "us"
+    if time_in < 1:
+        return str(int(time_in * 10 ** 6) / 10 ** 3) + "ms"
+    if time_in < 60:
+        return str(int(time_in * 10 ** 3) / 10 ** 3) + "s"
+    else:
+        return str(int(time_in)) + "s"
+
 
 number_of_random_values = [2**i for i in range(1,17)]
 measurements = [["number of values", "time to insert into plain", "time to insert into indexed",
@@ -104,9 +118,9 @@ for n in number_of_random_values:
                 exit()
     measurements[-1][5] += time()*time_c
 
-
-
-    table = PTC.PythonTableConsole(measurements)
+    table_map = copy.deepcopy(measurements)
+    table_map = [table_map[0]]+[[j[0]] + [parse_time(i) for i in j[1:]] for j in table_map[1:]]
+    table = PTC.PythonTableConsole(table_map)
     table.transpose()
     print(table)
 

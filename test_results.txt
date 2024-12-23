@@ -1,0 +1,15 @@
+|number of values|time to insert into plain|time to insert into indexed|  = plain|= indexed|  > plain|> indexed|
+|               2|                503.417ms|                    instant|  instant|512.695ms|  instant|  instant|
+|               4|                  instant|                    instant|  instant|  instant|  instant|  instant|
+|               8|                 504.15ms|                    instant|322.998ms|  instant|  instant|  instant|
+|              16|                 504.15ms|                    instant|502.441ms|  instant|  instant|  instant|
+|              32|                 504.15ms|                    instant|   1.505s|  instant|501.708ms|503.906ms|
+|              64|                   2.015s|                     9.388s|  instant|   1.003s|   1.166s|   3.005s|
+|             128|                   2.015s|                     9.388s|   1.002s|   2.004s|   7.005s|   2.523s|
+|             256|                   2.015s|                    10.391s|   3.505s|   2.003s|  26.446s|  15.033s|
+|             512|                   2.015s|                    14.401s|  13.013s|   1.002s|     197s|   8.016s|
+|            1024|                   2.015s|                    20.918s|  52.272s|   3.003s|    1501s|  35.606s|
+|            2048|                   3.018s|                    30.972s|     206s|   7.505s|   12136s|  52.191s|
+|            4096|                   4.021s|                    50.801s|     786s|  18.511s|   96272s|      74s|
+|            8192|                   6.025s|                        97s|    3095s|      64s|  752839s|     217s|
+|           16384|                   9.027s|                       171s|   12373s|     234s| 8758185s|     516s|
