@@ -8,7 +8,7 @@ Database = Data()
 ERROR = False
 
 
-number_of_random_values = [10**i for i in range(1,5)]
+number_of_random_values = [2**i for i in range(1,15)]
 measurements = [["number of values", "time to insert into plain", "time to insert into indexed",
                 "= plain", "= indexed", "> plain", "> indexed"]]
 values = []
@@ -20,7 +20,7 @@ for n in number_of_random_values:
     measurements.append([n,0,0,0,0,0,0])
 
     for i in tqdm.tqdm(range(n-len(values)),desc="Generating new values"):
-        values.append([int(140+random()*70), int(50+random()*100), int(random()*100)])
+        values.append([int(random()*n - n/2), int(random()*n- n/2), int(random()*n- n/2)])
 
     sleep(0.1)
     # insert plain
