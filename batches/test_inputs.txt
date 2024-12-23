@@ -6,3 +6,5 @@ SELECT FROM table;
 create table_01 (column_01, column_02);
 cReAtE 01_table (column_01, column_02);
 create table_02 (01_column, 02_column);
+SELECT FROM table WHERE X = 0;
+SELECT FROM table WHERE X = Y;

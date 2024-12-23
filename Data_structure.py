@@ -120,7 +120,7 @@ class Table:
                             column_1 = self.column_names.index(condition[0])
                             column_2 = self.column_names.index(condition[1])
                             i = len(rows_to_return) - 1
-                            while i > 0:
+                            while i >= 0:
                                 if not rows_to_return[i][column_1] == rows_to_return[i][column_2]:
                                     rows_to_return.pop(i)
                                 i -= 1
@@ -129,7 +129,7 @@ class Table:
                             column_1 = self.column_names.index(condition[0])
                             column_2 = self.column_names.index(condition[1])
                             i = len(rows_to_return) - 1
-                            while i > 0:
+                            while i >= 0:
                                 if not rows_to_return[i][column_1] > rows_to_return[i][column_2]:
                                     rows_to_return.pop(i)
                                 i -= 1
@@ -138,7 +138,7 @@ class Table:
                             column_1 = self.column_names.index(condition[0])
                             column_2 = self.column_names.index(condition[1])
                             i = len(rows_to_return) - 1
-                            while i > 0:
+                            while i >= 0:
                                 if not rows_to_return[i][column_1] < rows_to_return[i][column_2]:
                                     rows_to_return.pop(i)
                                 i -= 1
@@ -154,14 +154,14 @@ class Table:
                                 else:
                                     rows_to_return = copy.deepcopy(self.rows)
                                     i = len(rows_to_return) - 1
-                                    while i > 0:
+                                    while i >= 0:
                                         if not rows_to_return[i][column] == value:
                                             rows_to_return.pop(i)
                                         i -= 1
                             else:
                                 rows_to_return = copy.deepcopy(self.rows)
                                 i = len(rows_to_return) - 1
-                                while i > 0 :
+                                while i >= 0 :
                                     if not rows_to_return[i][column] == value:
                                         rows_to_return.pop(i)
                                     i-=1
@@ -174,14 +174,14 @@ class Table:
                                 else:
                                     rows_to_return = copy.deepcopy(self.rows)
                                     i = len(rows_to_return) - 1
-                                    while i > 0:
+                                    while i >= 0:
                                         if not rows_to_return[i][column] > value:
                                             rows_to_return.pop(i)
                                         i -= 1
                             else:
                                 rows_to_return = copy.deepcopy(self.rows)
                                 i = len(rows_to_return) - 1
-                                while i > 0:
+                                while i >= 0:
                                     if not rows_to_return[i][column] > value:
                                         rows_to_return.pop(i)
                                     i -= 1
@@ -194,14 +194,14 @@ class Table:
                                 else:
                                     rows_to_return = copy.deepcopy(self.rows)
                                     i = len(rows_to_return) - 1
-                                    while i > 0:
+                                    while i >= 0:
                                         if not rows_to_return[i][column] < value:
                                             rows_to_return.pop(i)
                                         i -= 1
                             else:
                                 rows_to_return = copy.deepcopy(self.rows)
                                 i = len(rows_to_return) - 1
-                                while i > 0:
+                                while i >= 0:
                                     if not rows_to_return[i][column] < value:
                                         rows_to_return.pop(i)
                                     i -= 1
