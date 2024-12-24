@@ -9,7 +9,6 @@ sys.setrecursionlimit(10**6)
 
 Database = Data()
 ERROR = False
-time_c = 10**3
 
 def parse_time(time_in):
     if time_in < 10**(-9):
@@ -47,7 +46,7 @@ for n in number_of_random_values:
 
     sleep(0.1)
     # insert plain
-    measurements[-1][1] = -time()*time_c
+    measurements[-1][1] = -time()
     for value in tqdm.tqdm(values, desc="Inserting plain " + str(n)):
         temp = Database.insert("plain", value)
         if isinstance(temp,int):
@@ -55,13 +54,13 @@ for n in number_of_random_values:
                 print(temp)
                 print(value)
                 exit()
-    measurements[-1][1] += time()*time_c
+    measurements[-1][1] += time()
     if len(measurements) > 3:
         measurements[-1][1] += measurements[-2][1]
 
     sleep(0.1)
     # insert indexed
-    measurements[-1][2] = -time()*time_c
+    measurements[-1][2] = -time()
     for value in tqdm.tqdm(values,desc="Inserting indexed " + str(n)):
         temp = Database.insert("index", value)
         if isinstance(temp, int):
@@ -70,53 +69,53 @@ for n in number_of_random_values:
                 print(temp)
                 print(value)
                 exit()
-    measurements[-1][2] += time()*time_c
+    measurements[-1][2] += time()
     if len(measurements) > 3:
         measurements[-1][2] += measurements[-2][2]
 
     sleep(0.1)
     # find equal indexed
-    measurements[-1][4] = -time()*time_c
+    measurements[-1][4] = -time()
     for i in tqdm.tqdm(range(n), desc="Finding equal indexed " + str(n)):
         temp = Database.select("index", False, ["height", all_values[i][0], "="])
         if isinstance(temp, int):
             if temp < 0:
                 print(temp)
                 exit()
-    measurements[-1][4] += time()*time_c
+    measurements[-1][4] += time()
 
     sleep(0.1)
     # find equal plain
-    measurements[-1][3] = -time()*time_c
+    measurements[-1][3] = -time()
     for i in tqdm.tqdm(range(n),desc = "Finding equal plain " + str(n)):
         temp = Database.select("plain",False,["height",all_values[i][0], "="])
         if isinstance(temp, int):
             if temp < 0:
                 print(temp)
                 exit()
-    measurements[-1][3] += time()*time_c
+    measurements[-1][3] += time()
 
     sleep(0.1)
     # find greater indexed
-    measurements[-1][6] = -time()*time_c
+    measurements[-1][6] = -time()
     for i in tqdm.tqdm(range(n), desc="Finding greater indexed " + str(n)):
         temp = Database.select("index", False, ["height", all_values[i][0], ">"])
         if isinstance(temp, int):
             if temp < 0:
                 print(temp)
                 exit()
-    measurements[-1][6] += time()*time_c
+    measurements[-1][6] += time()
 
     sleep(0.1)
     # find greater plain
-    measurements[-1][5] = -time()*time_c
+    measurements[-1][5] = -time()
     for i in tqdm.tqdm(range(n), desc="Finding greater plain " + str(n)):
         temp = Database.select("plain", False, ["height", all_values[i][0], ">"])
         if isinstance(temp, int):
             if temp < 0:
                 print(temp)
                 exit()
-    measurements[-1][5] += time()*time_c
+    measurements[-1][5] += time()
 
     table_map = copy.deepcopy(measurements)
     table_map = [table_map[0]]+[[j[0]] + [parse_time(i) for i in j[1:]] for j in table_map[1:]]
