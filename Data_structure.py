@@ -215,7 +215,6 @@ class Table:
                                 if self.rows[i][column_1] > self.rows[i][column_2]:
                                     rows_to_return[rows_to_return.index([])] = self.rows[i]
                         case "<":
-                            rows_to_return = copy.deepcopy(self.rows)
                             column_1 = self.column_names.index(condition[0])
                             column_2 = self.column_names.index(condition[1])
                             for i in range(len(self.rows)):
