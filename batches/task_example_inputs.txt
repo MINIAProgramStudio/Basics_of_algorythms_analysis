@@ -10,4 +10,5 @@ SELECT COUNT(id), AVG(weight)
 
 SELECT COUNT(id), AVG(weight)
   FROM measurements
+  WHERE id = 1
   GROUP_BY height;

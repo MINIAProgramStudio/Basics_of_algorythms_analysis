@@ -107,9 +107,8 @@ def parse_select(prepared_input):
                 break
             else:
                 condition[1] += symbol
-        prepared_input = prepared_input[c+1:]
+        prepared_input = prepared_input[c:]
     # Handle WHERE end/////////////////////////////////////////////////////////////////////////////////////////////////
-
 
     # Handle GROUP_BY start\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     if prepared_input[:9].upper() == "GROUP_BY ":

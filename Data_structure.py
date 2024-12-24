@@ -293,7 +293,7 @@ class Table:
                         return -3  # no such column
                     group_by_columns_names.append(str(function) + "(" + str(column) + ")")
                     column = self.column_names.index(column)
-                    match function:
+                    match function.upper():
                         case "COUNT":
                             rows_for_search = [i[:delimiter] for i in rows_to_return]
                             for row in raw_rows:
@@ -303,13 +303,15 @@ class Table:
                                 else:
                                     rows_to_return[rows_for_search.index(grouped_row)][-1] += 1
                         case "MAX":
+                            rows_for_search = [i[:delimiter] for i in rows_to_return]
                             for row in raw_rows:
                                 grouped_row = [row[i] for i in group_by_columns]
                                 if len(rows_to_return[rows_for_search.index(grouped_row)]) < len(group_by_columns_names):
                                     rows_to_return[rows_for_search.index(grouped_row)].append(row[column])
                                 else:
-                                    rows_to_return[rows_for_search.index(grouped_row)][-1] = max(row[column], rows_to_return[rows_to_return.index(grouped_row)][-1])
+                                    rows_to_return[rows_for_search.index(grouped_row)][-1] = max(row[column], rows_to_return[rows_for_search.index(grouped_row)][-1])
                         case "AVG":
+                            rows_for_search = [i[:delimiter] for i in rows_to_return]
                             counter = [0]*len(rows_to_return)
                             for row in raw_rows:
                                 grouped_row = [row[i] for i in group_by_columns]
